@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>BB WebRTC Translation</title>
+<script type="text/javascript" src="js/jquery.min.js" ></script>
+<script type="text/javascript" src="js/jquery.blockUI.js" ></script>
+<script type="text/javascript" src="js/bootstrap.js"></script>
+<script type="text/javascript" src="js/bootbox.min.js"></script>
+<script type="text/javascript" src="js/spin.min.js"></script>
+<script type="text/javascript" src="js/adapter.js?1" ></script>
+<script type="text/javascript" src="js/janus.js?1" ></script>
+<script type="text/javascript" src="js/trlchat.js?1"></script>
+<script type="text/javascript" src="js/textroomtest.js?1"></script>
+<link rel="stylesheet" href="css/cerulean/bootstrap.css" type="text/css"/>
+<link rel="stylesheet" href="css/demo.css" type="text/css"/>
+<link rel="stylesheet" href="css/font-awesome.css"/>
+<link href="css/slider2.css" rel="stylesheet">
+<style>
+#remoteVideo {width: 360; height: 180;}
+#remoteAudio {display: none;}
+#transAudio {display: none;}
+#mixAudio {display: none;}
+div#srcctlbar{ padding:10px; color:#CCC;}
+div#trlctlbar{ padding:10px; color:#CCC;}
+div#mixctlbar{ padding:10px; color:#CCC;}
+div#micctlbar{ padding:1px; color:#CCC;}
+input#srcvolumeslider{ width: 180px;}
+input#trlvolumeslider{ width: 180px;}
+input#mixvolumeslider{ width: 180px;}
+input#micvolumeslider{ width: 180px;}
+.col-md-12 {
+    float: left;
+    width: 800px;
+    margin-right: 2px;
+}
+.list-group-item {
+    padding: 1px 3px
+}
+</style>
+</head>
+<body>
+<script>
+// request permission on page load
+document.addEventListener('DOMContentLoaded', function () {
+  if (Notification.permission !== "granted")
+    Notification.requestPermission();
+});
+</script>
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="page-header">
+					<button class="btn btn-warning disabled" autocomplete="off" id="start">Connect</button>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+                                <div class="btn-group btn-group-sm">
+                                 <button autocomplete="off" id="translate" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Translation room: <span class="caret"></span></button>
+                                    <ul id="translatelist" class="dropdown-menu" role="menu">
+                                        <li><a href="#" id="15">Hebrew</a></li>
+                                        <li><a href="#" id="23">Russian</a></li>
+                                        <li><a href="#" id="24">English</a></li>
+                                        <li><a href="#" id="25">French</a></li>
+                                        <li><a href="#" id="26">Spanish</a></li>
+                                        <li><a href="#" id="27">German</a></li>
+                                        <li><a href="#" id="28">Italian</a></li>
+					<li><a href="#" id="42">Turkish</a></li>
+                                        <li><a href="#" id="41">Portuguese</a></li>
+                                        <li><a href="#" id="43">Bulgarian</a></li>
+                                        <li><a href="#" id="44">Georgian</a></li>
+                                        <li><a href="#" id="45">Romanian</a></li>
+                                        <li><a href="#" id="46">Hungarian</a></li>
+                                        <li><a href="#" id="47">Swedish</a></li>
+                                        <li><a href="#" id="48">Lithuanian</a></li>
+                                        <li><a href="#" id="49">Croatian</a></li>
+                                        <li><a href="#" id="50">Japanese</a></li>
+                                        <li><a href="#" id="51">Slovenian</a></li>
+                                        <li><a href="#" id="52">Polish</a></li>
+                                        <li><a href="#" id="53">Norvegian</a></li>
+                                        <li><a href="#" id="54">Latvian</a></li>
+                                        <li><a href="#" id="55">Ukrainian</a></li>
+                                        <li><a href="#" id="56">Niderland</a></li>
+                                    </ul>
+                                </div>
+                        </div>
+			</div>
+			<div class="container" id="details">
+				<div class="row">
+					<div class="col-md-5">
+					</div>
+				</div>
+			</div>
+			<div class="container hide" id="roomjoin">
+				<div class="row">
+					<span class="label label-info" id="you"></span>
+					<div class="col-md-5" id="controls">
+						<div class="input-group margin-bottom-md hide" id="registernow">
+							<span class="input-group-addon">@</span>
+							<input autocomplete="off" class="form-control" autocomplete="off" type="text" placeholder="Choose a display name" id="username" onkeypress="return checkEnter(this, event);"></input>
+							<span class="input-group-btn">
+								<button class="btn btn-success" autocomplete="off" id="register">Enter</button>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="container hide" id="chat">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="panel panel-default">
+                                                        <div class="panel-heading">
+                                                                <h3 class="panel-title"> <span class="label label-primary hide" id="publisher"></span></h3>
+                                                        </div>
+                                                        <div class="panel-body" id="micaudio">
+                                                                <div class="input-group margin-bottom-sm" id="dataout" style="height: 150px;">
+                                                                <div contenteditable="true" id="datarecv" name="datarecv" style="font-size: 12px; margin: 10px;height: 150px;width: 580px; overflow-y: scroll;"></div>
+                                                                </div>
+                                                                </div>
+                                                                <div class="panel panel-default" style="position: absolute; bottom: 90px; right: 22px; height: 150px;width: 150px;">
+                                                                <div id="list" class="list-group">
+                                                                </div>
+                                                                </div>
+                                                                <div class="panel-footer"
+                                                                <div class="input-group margin-bottom-sm" id="datain">
+                                                                <input class="form-control" id="datasend" type="text" size=120 placeholder="Write here" autocomplete="off" onkeypress="return checkEnter(this, event);" disabled></input>
+                                                                </div>
+                                                                </div>
+                                                        </div>
+                                                </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<hr>
+</div>
+</body>
+</html>
