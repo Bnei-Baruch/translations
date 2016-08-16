@@ -1,12 +1,6 @@
-// var srv = "v4g.kbb1.com";
-var srv = "galaxy-dev.kbb1.com";
-var server = null;
-// if(window.location.protocol === 'http:')
-// 	server = "http://" + srv + ":8088/janus";
-// else
-// 	server = "https://" + srv + ":8889/janus";
+var server = "https://galaxy-dev.kbb1.com:8889/janus";
 
-server = "https://" + srv + ":8889/janus";
+var roomId = 9999;
 
 var janus = null;
 var mcutest = null;
@@ -37,8 +31,6 @@ var pluginHandles = [];
 var textroom = null;
 var participants = {}
 var transactions = {}
-
-var roomId = 9999;
 
 $(document).ready(function() {
   // Initialize the library (console debug enabled)
