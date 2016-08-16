@@ -199,12 +199,11 @@ function attachVideo() {
 		},
 		mediaState: function(medium, on) {
 			Janus.log("Janus " + (on ? "started" : "stopped") + " receiving our " + medium);
-			// Enter chat with videoroom plugin username
-			enterChat(myusername);
 		},
 		webrtcState: function(on) {
 			Janus.log("Janus says our WebRTC PeerConnection is " + (on ? "up" : "down") + " now");
-			//$("#videolocal").parent().parent().unblock();
+			// Enter chat with videoroom plugin username
+			enterChat(myusername);
 		},
 		onmessage: function(msg, jsep) {
 			console.log(" ::: Got a message (publisher) :::");
