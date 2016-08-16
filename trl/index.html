@@ -17,6 +17,7 @@
 <script type="text/javascript" src="js/volume-meter/main.js"></script>
 <script type="text/javascript" src="js/trlclient.js?1"></script>
 <script type="text/javascript" src="js/chat.js"></script>
+<script type="text/javascript" src="js/functions.js"></script>
 <!--script type="text/javascript" src="support.js"></script-->
 <link rel="stylesheet" href="css/cerulean/bootstrap.css" type="text/css"/>
 <link rel="stylesheet" href="css/demo.css" type="text/css"/>
@@ -90,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 </div>
                         </div>
                 </div-->
-		<div class="col-md-5">
+		<div class="col-md-6">
 			<button class="btn btn-warning disabled" autocomplete="off" id="start">Connect</button>
 			&nbsp;&nbsp;&nbsp;&nbsp;
 			<button class="btn btn-success hide" id="startForward">&nbsp;&nbsp;Start&nbsp;&nbsp;</button>
@@ -128,14 +129,15 @@ document.addEventListener('DOMContentLoaded', function () {
 		    <ul id="deviceslist" class="dropdown-menu" role="menu">
 		    </ul>
 		</div>
-		<div class="btn-group btn-group-sm">
-			<button type="button" id="support" class="btn btn-primary btn-xs disabled" value="Support"><i class="fa fa-headphones fa-lg"></i> Offline</button>
-                </div>
+		<!--div class="btn-group btn-group-sm">
+			<button type="button" id="support" class="btn btn-primary btn-xs disabled" value="Support"><i class="fa fa-headphones fa-lg"></i> Support Offline</button>
+                </div-->
 		 <div class="input-group input-group-sm" style="left: 110px;" id="input">
 		  <span class="input-group-addon" style="width: 50px;">My name:</span>
 		  <input type="text" class="form-control" placeholder="Enter Here" id="displayname" style="width: 200px;">
 		</div>
 		</div>
+		<button type="button" id="support" class="btn btn-primary btn-xs disabled" value="Support" style="position: absolute; top: 10px; left: 240px;"><i class="fa fa-headphones fa-lg"></i> Support Offline</button>
 		<div class="col-md-5 pull-right hide" id="micpanel">
                         <div class="panel panel-default">
                                 <div class="panel-heading" id="micheader">

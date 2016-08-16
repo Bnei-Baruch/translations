@@ -41,6 +41,7 @@ var trlFeeds = [];
 var bitrateTimer = [];
 var pluginHandles = [];
 var participants = {};
+var tvals = {};
 var moderators = {};
 var transactions = {};
 
@@ -255,7 +256,7 @@ function attachVideo() {
 						$('#'+leaving).hide();
 						$('#a'+leaving).remove();
 						var remoteFeed = null;
-						for(var i=1; i<6; i++) {
+						for(var i=1; i<9; i++) {
 							if(feeds[i] != null && feeds[i] != undefined && feeds[i].rfid == leaving) {
 								remoteFeed = feeds[i];
 								break;
@@ -265,6 +266,8 @@ function attachVideo() {
 							console.log("Feed " + remoteFeed.rfid + " (" + remoteFeed.rfdisplay + ") has left the room, detaching");
 							var display = remoteFeed.rfdisplay;
 							var dstatus = display.split("_");
+							var t = remoteFeed.rfindex;
+							clearInterval(tvals[t]);
 							if(dstatus[1] === "bb") {
 								 console.log("-- ::Leaving BB translator");
 								 $('#mixname').empty().hide();
@@ -285,7 +288,7 @@ function attachVideo() {
 						$('#'+unpublished).hide();
 						$('#a'+unpublished).remove();
 						var remoteFeed = null;
-						for(var i=1; i<6; i++) {
+						for(var i=1; i<9; i++) {
 							if(feeds[i] != null && feeds[i] != undefined && feeds[i].rfid == unpublished) {
 								remoteFeed = feeds[i];
 								break;
@@ -295,6 +298,8 @@ function attachVideo() {
 							console.log("Feed " + remoteFeed.rfid + " (" + remoteFeed.rfdisplay + ") has left the room, detaching");
 							var display = remoteFeed.rfdisplay;
 							var dstatus = display.split("_");
+							var t = remoteFeed.rfindex;
+							clearInterval(tvals[t]);
 							console.log("-- ::STATUS: " + dstatus[1]);
 							if(dstatus[1] === "bb") {
 								 console.log("-- ::Leaving BB translator");
@@ -735,7 +740,7 @@ function newRemoteFeed(id, display) {
 	            if(event != undefined && event != null) {
 	                    if(event === "attached") {
 	                            // Subscriber created and attached
-	                            for(var i=1;i<6;i++) {
+	                            for(var i=1;i<9;i++) {
 	                                    if(feeds[i] === undefined || feeds[i] === null) {
 	                                            feeds[i] = remoteFeed;
 	                                            remoteFeed.rfindex = i;
@@ -791,6 +796,7 @@ function newRemoteFeed(id, display) {
 			trlAudio.volume = trlaud.volume;
 			trlAudio.muted = trlaud.muted;
 	            attachMediaStream($('#a'+remoteFeed.rfid).get(0), stream);
+			var streamElementMuter = new StreamElementMuter(stream, remoteFeed.rfdisplay, remoteFeed.rfindex);
 	            $('#trl2panel').removeClass('hide').show();
 	            $('#datain').removeClass('hide').show();
 	            $('#dataout').removeClass('hide').show();
@@ -802,6 +808,7 @@ function newRemoteFeed(id, display) {
 	            $('#datasend').removeAttr('disabled');
 	    },
 	ondata: function(data) {
+		/*
 		var dataparse = data.split(":");
 		Janus.debug("We got data from: " + data);
 		Janus.debug(" -- Split data: " + dataparse[0]);
@@ -817,6 +824,7 @@ function newRemoteFeed(id, display) {
 				
 			}
 		}
+		*/
 	},
         oncleanup: function() {
             console.log(" ::: Got a cleanup notification (remote feed " + id + ") :::");

@@ -104,6 +104,12 @@ function attachChat() {
 				if(username !== mychatid && $('#rp' + username).length === 0 && display !== "bb_shidur") {
 					// Add to the participants list
 					$('#list').append('<li id="rp' + username + '" class="list-group-item">' + displayname + '</li>');
+					for(var i=1; i<9; i++) {
+                                        if(feeds[i] != null && feeds[i] != undefined && feeds[i].rfdisplay == display) {
+                                                feeds[i].rfchat = username;
+                                                break;
+                                                }
+                                        }
 					datamsg = "<span style='color: green;'><i>" + displayname + "</span> joined</i><br>";
 					var user = "SYSTEM";
 					var text = displayname + " joined";
@@ -210,6 +216,13 @@ function enterChat(myusername) {
 				participants[p.username] = p.display ? p.display : p.username;
 				if(p.username !== mychatid && $('#rp' + p.username).length === 0 && p.display !== "bb_shidur") {
 					$('#list').append('<li id="rp' + p.username + '" class="list-group-item">' + participants[p.username].split("_")[0] + '</li>');
+					// Make videoroom and chat plugin connection
+					for(var i=1; i<9; i++) {
+                                        if(feeds[i] != null && feeds[i] != undefined && feeds[i].rfdisplay == p.display) {
+                                                feeds[i].rfchat = p.username;
+                                                break;
+						}
+					}
 					$('#rp' + p.username).css('cursor', 'pointer').click(function() {
 						var username = $(this).attr('id').split("rp")[1];
 						sendPrivateMsg(username);
@@ -293,9 +306,9 @@ function checkUser() {
 		}
 	}
 	if(moderators.length > 0) {
-		$('#support').removeClass('disabled').addClass('btn-success').html("<i class='fa fa-headphones fa-lg'></i> Online").show();
+		$('#support').removeClass('disabled').addClass('btn-success').html("<i class='fa fa-headphones fa-lg'></i> Support Online").show();
 	} else {
-		$('#support').removeClass('btn-success').addClass('btn-primary disabled').html("<i class='fa fa-headphones fa-lg'></i> Offline").show();
+		$('#support').removeClass('btn-success').addClass('btn-primary disabled').html("<i class='fa fa-headphones fa-lg'></i> Support Offline").show();
 	}
 }
 
