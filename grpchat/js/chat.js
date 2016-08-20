@@ -99,11 +99,15 @@ function checkEnter(field, event) {
   var theCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
   if(theCode == 13) {
     if(field.id == 'datasend')
-      sendData();
+      sendData(false);
     return false;
   } else {
     return true;
   }
+}
+
+function sentEveryone() {
+  sendData(true);
 }
 
 function addUser(p) {
@@ -157,7 +161,6 @@ function enterChat(roomid) {
 		}
 		// We're in
 		$('#datasend').removeAttr('disabled');
-    addUser({ username: 'everyone', display: 'Everyone' });
 		// Any participants already in?
 		console.log("Participants:", response.participants);
     response.participants.forEach(function (p) {
@@ -240,7 +243,7 @@ function getHiddenProp(){
     return null;
 }
 
-function sendData() {
+function sendData(isEveryone) {
 	var data = $('#datasend').val();
 	if(data === "") {
 		bootbox.alert('Insert a message to send on the DataChannel');
@@ -252,8 +255,8 @@ function sendData() {
 		room: roomId,
 		text: data
 	};
-  var to = getActiveUsername();
-  if (to !== 'everyone') {
+  if (!isEveryone) {
+    var to = getActiveUsername();
     message.to = to;
     showMessage('bb_shidur', data, to);
   }

@@ -71,10 +71,15 @@
                                               12px; margin: 10px;height: 150px;width: 100%; overflow-y: scroll;"></div>
                                         </div>
                                     </div>
-                                    <div class="panel-footer"
-                                        <div class="input-group margin-bottom-sm" id="datain">
-                                          <input class="form-control" id="datasend" type="text" size=120 placeholder="Write here"
-                                                 autocomplete="off" onkeypress="return checkEnter(this, event);" disabled></input>
+                                    <div class="panel-footer">
+                                        <div class="input-group" id="datain" style="width: 100%;">
+                                          <div class="everyone">
+                                            <button style="height: 38px;" onclick="sentEveryone();">Everyone</button>
+                                          </div>
+                                          <div style="overflow: hidden;">
+                                            <input class="form-control" id="datasend" type="text" placeholder="Write here"
+                                                   autocomplete="off" onkeypress="return checkEnter(this, event);" disabled></input>
+                                          </div>
                                         </div>
                                     </div>
                                 </div>

@@ -85,3 +85,19 @@ div.no-video-container {
 	left: 0px;
 	font-size: 24px;
 }
+
+.everyone {
+  overflow: hidden;
+  padding-left: 5px;
+  float: right;
+  width: 20px;
+  transition: width 0.2s ease-in-out;
+  border-right: #bbbbbb;
+  border-width: 1px;
+  border-right-style: solid;
+}
+
+.everyone:hover {
+  transition: width 0.2s ease-in-out;
+  width: 79px;
+}
