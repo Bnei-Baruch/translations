@@ -115,7 +115,16 @@ function addUser(p) {
     return;
   }
   removeUser(p);
-  $('#rooms-list').append('<a id="user-' + p.username + '" href="#" class="list-group-item">' + p.display + '</a>');
+  var anchor = '<a id="user-' + p.username + '" href="#" class="list-group-item">' + p.display + '</a>';
+  var displayNames = $('#rooms-list a').map((key, anchor) => anchor.text).toArray();
+  displayNames.push(p.display);
+  displayNames.sort();
+  var idx = displayNames.indexOf(p.display) - 1;
+  if (idx >= 0) {
+    $('#rooms-list a:eq(' + idx + ')').after(anchor);
+  } else {
+    $('#rooms-list').prepend(anchor);
+  }
   $('#user-' + p.username).click(function() {
     setActive($(this));
     console.log('Clicked on ' + p.username + ' ' + p.display);
@@ -207,7 +216,8 @@ function showMessage(user, text, to) {
   if (user == 'bb_shidur') {
     toMsg = to ? " (to " + to + ")" : " (to everyone)";
   }
-  var datamsg = "<span style='color: #2fa4e7'>" + user + toMsg + "</span>" + " : " + text + "<br>";
+  var time = new Date().toLocaleTimeString();
+  var datamsg = "<span style='color: #2fa4e7'>" + user + toMsg + " " + time + "</span> : " + text + "<br>";
 	var logDiv = document.getElementById("datarecv");
 	$('#datarecv').last().append(datamsg);
 	logDiv.scrollTop = logDiv.scrollHeight;
@@ -218,29 +228,29 @@ function showMessage(user, text, to) {
 }
 
 function notifyMe(title, message, tout) {
-        if (!Notification) {
-                alert('Desktop notifications not available in your browser. Try Chromium.');
-                return;
-        }
-        if (Notification.permission !== "granted")
-                Notification.requestPermission();
-        else {
-                var notification = new Notification(title+":", {
-                        icon: 'nlogo.png',
-                        body: message,
-                        requireInteraction: tout
-                });
-        }
+  if (!Notification) {
+    alert('Desktop notifications not available in your browser. Try Chromium.');
+    return;
+  }
+  if (Notification.permission !== "granted") {
+    Notification.requestPermission();
+  } else {
+    var notification = new Notification(title + ":", {
+      icon: 'nlogo.png',
+      body: message,
+      requireInteraction: tout
+    });
+  }
 }
 
-function getHiddenProp(){
-    var prefixes = ['webkit','moz','ms','o'];
-    if ('hidden' in document) return 'hidden';
-    for (var i = 0; i < prefixes.length; i++){
-        if ((prefixes[i] + 'Hidden') in document)
-            return prefixes[i] + 'Hidden';
-    }
-    return null;
+function getHiddenProp() {
+  var prefixes = ['webkit','moz','ms','o'];
+  if ('hidden' in document) return 'hidden';
+  for (var i = 0; i < prefixes.length; i++){
+    if ((prefixes[i] + 'Hidden') in document)
+      return prefixes[i] + 'Hidden';
+  }
+  return null;
 }
 
 function sendData(isEveryone) {
