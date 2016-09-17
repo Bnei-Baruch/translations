@@ -93,16 +93,22 @@ function attachChat() {
 				// Somebody joined
 				var username = json["username"];
 				var display = json["display"];
+				var fromroom = json["room"];
 				participants[username] = display ? display : username;
+				var displayname = participants[username].split("_")[0];
+				var role = participants[username].split("_")[1];
 				if(username !== mychatid && $('#rp' + username).length === 0 && display !== "bb_shidur") {
-					// Add to the participants list
-					$('#list').append('<li id="rp' + username + '" class="list-group-item">' + participants[username].split("_")[0] + '</li>');
-					$('#rp' + username).css('cursor', 'pointer').click(function() {
-						var username = $(this).attr('id').split("rp")[1];
-						sendPrivateMsg(username);
-					});
+					chatrooms[fromroom][username] = display;
+					if(fromroom === roomid && role == "bb") {
+						// Add to the participants list
+						$('#sessions-list').append('<li id="rp' + username + '" class="list-group-item">' + displayname + '</li>');
+						/*/ No private message
+						$('#rp' + username).css('cursor', 'pointer').click(function() {
+							var username = $(this).attr('id').split("rp")[1];
+							sendPrivateMsg(username);
+						});*/
+					}
 				}
-				var displayname = participants[username].split("_")[0]
 				datamsg = "<span style='color: green;'><i>" + displayname + "</span> joined</i><br>";
 				var user = "SYSTEM";
                                 //var text = displayname + " joined";
@@ -110,12 +116,14 @@ function attachChat() {
 			} else if(what === "leave") {
 				// Somebody left
 				var username = json["username"];
+				var fromroom = json["room"];
 				var displayname = participants[username].split("_")[0]
 				$('#rp' + username).remove();
 				datamsg = "<span style='color: green;'><i>" + displayname + "</span> leave</i><br>";
                                 var user = "SYSTEM";
                                 //var text = displayname + " leave";
                                 //showMessage(user, text, datamsg);
+                                delete chatrooms[fromroom][username];
 				delete participants[username];
 			} else if(what === "destroyed") {
 				// Room was destroyed, goodbye!
@@ -169,17 +177,21 @@ function enterChat(roomid) {
 		$('#datasend').removeAttr('disabled');
 		// Any participants already in?
 		console.log("Participants:", response.participants);
+		chatrooms[roomid] = {};
 		if(response.participants && response.participants.length > 0) {
+			//chatrooms[roomid] = response.participants;
 			for(var i in response.participants) {
 				var p = response.participants[i];
 				participants[p.username] = p.display ? p.display : p.username;
 				if(p.username !== mychatid && $('#rp' + p.username).length === 0) {
+					//chatrooms[roomid][p.username] = p.display ;
+					chatrooms[roomid][p.username] = p.display;
 					// Add to the participants list
 					$('#list').append('<li id="rp' + p.username + '" class="list-group-item">' + participants[p.username].split("_")[0] + '</li>');
-					$('#rp' + p.username).css('cursor', 'pointer').click(function() {
+					/*$('#rp' + p.username).css('cursor', 'pointer').click(function() {
 						var username = $(this).attr('id').split("rp")[1];
 						sendPrivateMsg(username);
-					});
+					});*/
 				}
 			}
 		}

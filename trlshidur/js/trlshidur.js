@@ -32,8 +32,9 @@ var supfeeds = [];
 var bitrateTimer = [];
 var pluginHandles = [];
 var textroom = null;
-var participants = {}
-var transactions = {}
+var participants = {};
+var chatrooms = {};
+var transactions = {};
 
 var roomlist = {
         1150 : "Hebrew",
@@ -256,9 +257,16 @@ function getRooms() {
 				//console.log("--::"+roomid+" : "+roomname+" : "+pnum);
 				$('#rooms-list').append('<a id="'+room+'" href="#" class="list-group-item">'+roomname+'<span id="'+room+'-pnum" style="float: right;">('+pnum+')</span></a>');
 				$('#'+room).click(function() {
+					$('#datarecv').empty();
 					roomid = Number($(this).attr("id"));
 					$('#supusername').addClass('hide').show();
 					$('#sessions-list').empty();
+					for(var i in chatrooms[roomid]) {
+						var role = chatrooms[roomid][i].split("_")[1];
+						if(role == "bb") {
+							$('#sessions-list').append('<li id="rp' + i + '" class="list-group-item">' + chatrooms[roomid][i].split("_")[0] + '</li>');
+						}
+					}
 					if(myid) {
 						feeds.forEach(function (feed) {
 							//console.log("-- :: Remove Feed:"+feed.id);
