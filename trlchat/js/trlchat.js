@@ -26,6 +26,7 @@ var trlFeeds = [];
 var pluginHandles = [];
 var participants = {};
 var transactions = {};
+var moderators = {};
 
 if(localStorage.translate) {
 	console.log("  -- Storage Translate: " + localStorage.translate);
@@ -74,6 +75,7 @@ function initPlugins() {
 			{url: "turn:v4g.kbb1.com", credential:"tpass", username: "tuser"}],
 		success: function() {
 			attachChat();
+			$('#support').click(supportReq);
 		},
 		error: function(error) {
 			console.log(error);

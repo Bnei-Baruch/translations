@@ -107,6 +107,7 @@ function attachChat() {
 				var display = json["display"];
 				participants[username] = display ? display : username;
 				var displayname = participants[username].split("_")[0];
+				checkUser();
 				if(username !== mychatid && $('#rp' + username).length === 0 && display !== "bb_shidur") {
 					// Add to the participants list
 					$('#list').append('<li id="rp' + username + '" class="list-group-item">' + displayname + '</li>');
@@ -132,6 +133,7 @@ function attachChat() {
                                         showMessage(user, text, datamsg);
                                 }
 				delete participants[username];
+				checkUser();
 			} else if(what === "destroyed") {
 				// Room was destroyed, goodbye!
 				Janus.warn("The room has been destroyed!");
@@ -224,6 +226,7 @@ function registerUsername() {
 							sendPrivateMsg(username);
 						});
 					}
+					checkUser();
 					//$('#datarecv').append('<p><i style="color: green;">' + participants[p.username] + ' joined</i></p>');
 					//$('#datarecv').get(0).scrollTop = $('#datarecv').get(0).scrollHeight;				
 				}
@@ -239,6 +242,49 @@ function registerUsername() {
 		});
 	}
 }
+
+function supportReq() {
+        for(var i in participants) {
+                var display = participants[i];
+                var username = i;
+                if(display === "bb_shidur") {
+                        var message = {
+                                textroom: "message",
+                                transaction: randomString(12),
+                                room: room,
+                                to: username,
+                                text: "need support!"
+                        };
+                        textroom.data({
+                                text: JSON.stringify(message),
+                                error: function(reason) { bootbox.alert(reason); },
+                                success: function() {
+                                        var datamsg = "<span style='color: red;'><i>Support request is sent, please wait..</i></span><br>";
+                                        var logDiv = document.getElementById("datarecv");
+                                        $('#datarecv').last().append(datamsg);
+                                        logDiv.scrollTop = logDiv.scrollHeight;
+                                }
+                        });
+                }
+        }
+}
+
+function checkUser() {
+        var moderators = [];
+        for(var i in participants) {
+                var display = participants[i];
+                var username = i;
+                if(display === "bb_shidur") {
+                        var moderators = username;
+                }
+        }
+        if(moderators.length > 0) {
+                $('#support').removeClass('disabled').addClass('btn-success').html("<i class='fa fa-headphones fa-lg'></i> Support Online").show();
+        } else {
+                $('#support').removeClass('btn-success').addClass('btn-primary disabled').html("<i class='fa fa-headphones fa-lg'></i> Support Offline").show();
+        }
+}
+
 
 function sendPrivateMsg(username) {
 	var display = participants[username];
