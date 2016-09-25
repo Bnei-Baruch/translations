@@ -1,9 +1,9 @@
 var srv = "v4g.kbb1.com";
 var server = null;
 if(window.location.protocol === 'http:')
-	server = "http://" + srv + ":8088/janus";
+	server = "http://" + srv + "/janustrl";
 else
-	server = "https://" + srv + ":8889/janus";
+	server = "https://" + srv + "/janustrl";
 
 var janus = null;
 var mixer = null;
@@ -65,7 +65,7 @@ var roomlist = {
 $(document).ready(function() {
 	intializePlayer();
 	// Initialize the library (console debug enabled)
-	Janus.init({ debug: true, callback: initPlugin });
+	Janus.init({ debug: false, callback: initPlugin });
 });
 
 function initPlugin() {
@@ -96,7 +96,6 @@ function autoRefresh() {
 		var req = { "request":"list" };
 		mixer.send({"message": req,
 			success: function(data) {
-				//console.log("--:: Autorefresh messege"+data);
 				for(var f in data.list) {
 					var room = data.list[f]["room"];
 					var roomname = data.list[f]["description"];
@@ -117,7 +116,6 @@ function getRooms() {
 				var room = data.list[f]["room"];
 				var roomname = data.list[f]["description"];
 				var pnum = data.list[f]["num_participants"];
-				//console.log("--::"+roomid+" : "+roomname+" : "+pnum);
 				$('#rooms-list').append('<a id="'+room+'" href="#" class="list-group-item">'+roomname+'<span id="'+room+'-pnum" style="float: right;">('+pnum+')</span></a>');
 				$('#'+room).click(function() {
 					roomid = Number($(this).attr("id"));
@@ -127,27 +125,8 @@ function getRooms() {
 					$('#supusername').addClass('hide').show();
 					$('#list').empty();
 					chatList(roomid);
-					if(myid) {
-						var reg = { "request": "changeroom", "room": roomid, "display": "bb_shidur" };
-						mixer.send({"message": reg});
-						//chatList(roomid);
-						/*
-						feeds.forEach(function (feed) {
-							//console.log("-- :: Remove Feed:"+feed.id);
-							if(feed != null && feed != undefined) {
-								$('#a'+feed.rfid).remove();
-								feed.detach();
-							}
-						    });
-						feeds = [];
-						mixer.detach();
-						attachHandle(roomid);
-						*/
-					} else {
-						registerUsername(roomid);
-						//mixer.hangup();
-						//attachHandle();
-					}
+					var reg = { "request": "changeroom", "room": roomid, "display": "bb_shidur" };
+					mixer.send({"message": reg});
 				});
 			}
 		}

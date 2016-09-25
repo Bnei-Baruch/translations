@@ -367,6 +367,9 @@ function notifyMe(title, message) {
                         icon: 'nlogo.png',
                         body: message,
                 });
+		notification.onclick = function () {
+                        window.focus();
+                }
         }
 }
 

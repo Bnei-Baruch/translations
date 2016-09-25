@@ -255,6 +255,9 @@ function notifyMe(title, message, tout) {
                         body: message,
                         requireInteraction: tout
                 });
+		notification.onclick = function () {
+                        window.focus();
+                }
         }
 }
 

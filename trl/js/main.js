@@ -3,7 +3,7 @@ var srv = "v4g.kbb1.com";
 if(window.location.protocol === 'http:')
 	window.location = "https://" + srv + "/trl"; 
 else
-        server = "https://" + srv + ":8889/janus";
+        server = "https://" + srv + "/janustrl";
 
 var janus = null;
 var textroom = null;
@@ -17,8 +17,8 @@ var rmid = null;
 var mystream = null;
 var muted = false;
 
-var ip = "10.66.24.122";
-//var ip = "10.66.23.104";
+//var ip = "10.66.24.122";
+var ip = "10.66.23.104";
 var lang;
 var device = "default";
 
@@ -27,29 +27,29 @@ var moderators = {};
 var transactions = {};
 
 var lnglist = {
-	"Hebrew"	:5150,
-	"Russian"	:5230,
-	"English"	:5240,
-	"French"	:5250,
-	"Spanish"	:5260,
-	"German"	:5270,
-	"Italian"	:5280,
-	"Turkish"	:5300,
-	"Portuguese"	:5320,
-	"Bulgarian"	:5340,
-	"Georgian"	:5360,
-	"Romanian"	:5380,
-	"Hungarian"	:5400,
-	"Swedish"	:5420,
-	"Lithuanian"	:5440,
-	"Croatian"	:5460,
-	"Japanese"	:5480,
-	"Slovenian"	:5500,
-	"Polish"	:5520,
-	"Norvegian"	:5540,
-	"Latvian"	:5560,
-	"Ukrainian"	:5580,
-	"Niderland"	:5600
+	"Hebrew"	:5158,
+	"Russian"	:5238,
+	"English"	:5248,
+	"French"	:5258,
+	"Spanish"	:5268,
+	"German"	:5278,
+	"Italian"	:5288,
+	"Turkish"	:5308,
+	"Portuguese"	:5328,
+	"Bulgarian"	:5348,
+	"Georgian"	:5368,
+	"Romanian"	:5388,
+	"Hungarian"	:5408,
+	"Swedish"	:5428,
+	"Lithuanian"	:5448,
+	"Croatian"	:5468,
+	"Japanese"	:5488,
+	"Slovenian"	:5508,
+	"Polish"	:5528,
+	"Norvegian"	:5548,
+	"Latvian"	:5568,
+	"Ukrainian"	:5588,
+	"Niderland"	:5608
 	}
 
 if(localStorage.translate) {
@@ -128,7 +128,7 @@ $(document).ready(function() {
 		$('#start').removeClass('disabled');
 	}
 
-	Janus.init({ debug: true, callback: function() {
+	Janus.init({ debug: false, callback: function() {
 		$('#start').click(initPlugins);
 		}
 	});

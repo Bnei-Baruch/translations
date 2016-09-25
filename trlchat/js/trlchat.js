@@ -4,7 +4,7 @@ if(window.location.protocol === 'http:')
 	window.location = "https://" + srv + "/trlchat"; 
         //server = "http://" + srv + ":8088/janus";
 else
-        server = "https://" + srv + ":8889/janus";
+        server = "https://" + srv + "/janustrl";
 
 var janus = null;
 var mcutest = null;
@@ -58,7 +58,7 @@ $(document).ready(function() {
 	if(translate != undefined && translate != null) {
 		$('#start').removeClass('disabled');
 	}
-	Janus.init({ debug: true, callback: function() {
+	Janus.init({ debug: false, callback: function() {
 		$('#start').click(initPlugins);
 		}
 	});
