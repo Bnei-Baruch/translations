@@ -25,11 +25,12 @@ var fwlist = [];
 var fwport = null;
 var muted = false;
 
-//var ip = "10.66.24.70";
-var ip = "10.66.23.104";
+var ip = "10.66.24.70";
+//var ip = "10.66.23.104";
 var localport = null;
 var remoteport = null;
 var aport = 8002;
+var mixport = 5002;
 var vport = 9884;
 var lang;
 var device = "default";
@@ -116,6 +117,12 @@ $(document).on('click', '#deviceslist li a', function () {
         //}
 });
 
+$(document).on('keydown', function(e) {
+	  if (e.keyCode === 18) {
+		console.log("--:: ALT key pressed!");
+	  }
+});
+
 $(document).ready(function() {
 	intializePlayer();
 	initDevices();
@@ -138,14 +145,17 @@ $(document).ready(function() {
 	if(translate != undefined && translate != null) {
 		$('#translate').removeClass('hide').html("Translate to: " + localStorage.translatetext).show();
 	}
+
 	if(device == "default") {
 		$('#devices').removeClass('hide').html("Input: Default").show();
 	} else {
 		$('#devices').removeClass('hide').html("Input: " + localStorage.devicetext).show();
 	}
+
 	if(translate != undefined && translate != null) {
 		$('#start').removeClass('disabled');
 	}
+
 	Janus.init({ debug: true, callback: function() {
 		$('#start').click(initPlugins);
 		}
@@ -159,8 +169,8 @@ function initPlugins() {
 	$(this).attr('disabled', true).unbind('click');
 	janus = new Janus({
 		server: server,
-		iceServers: [{url: "stun:v4g.kbb1.com:3478"},
-			{url: "turn:v4g.kbb1.com", credential:"tpass", username: "tuser"}],
+		iceServers: [{url: "stun:itgb.net:3478"}],
+			//{url: "turn:v4g.kbb1.com", credential:"tpass", username: "tuser"}],
 		success: function() {
 			attachVideo();
 			$('#support').click(supportReq);
@@ -199,11 +209,15 @@ function attachVideo() {
 		},
 		mediaState: function(medium, on) {
 			Janus.log("Janus " + (on ? "started" : "stopped") + " receiving our " + medium);
+			// Enter chat with videoroom plugin username
+			//enterChat(myusername);
 		},
 		webrtcState: function(on) {
 			Janus.log("Janus says our WebRTC PeerConnection is " + (on ? "up" : "down") + " now");
+			//$("#videolocal").parent().parent().unblock();
 			// Enter chat with videoroom plugin username
 			enterChat(myusername);
+			attachAudio();
 		},
 		onmessage: function(msg, jsep) {
 			console.log(" ::: Got a message (publisher) :::");
@@ -596,9 +610,6 @@ function unpublishOwnFeed() {
 }
 
 function startForward() {
-        // Forward local rtp stream
-        console.log(" --- ::Start forward rtp for id: " + myid);
-	// decoder.il.kbb1.com = 62.219.8.116
         var forward = { "request": "rtp_forward","publisher_id":myid,"room":room,"secret":"adminpwd","host":ip,"audio_port":fwport, "video_port":vport};
         mcutest.send({"message": forward,
 		      success: function(data) {

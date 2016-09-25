@@ -101,7 +101,7 @@ function attachChat() {
 					chatrooms[fromroom][username] = display;
 					if(fromroom === roomid && role == "bb") {
 						// Add to the participants list
-						$('#sessions-list').append('<li id="rp' + username + '" class="list-group-item">' + displayname + '</li>');
+						$('#list').append('<li id="rp' + username + '" class="list-group-item">' + displayname + '</li>');
 						/*/ No private message
 						$('#rp' + username).css('cursor', 'pointer').click(function() {
 							var username = $(this).attr('id').split("rp")[1];
@@ -187,7 +187,7 @@ function enterChat(roomid) {
 					//chatrooms[roomid][p.username] = p.display ;
 					chatrooms[roomid][p.username] = p.display;
 					// Add to the participants list
-					$('#list').append('<li id="rp' + p.username + '" class="list-group-item">' + participants[p.username].split("_")[0] + '</li>');
+					//$('#list').append('<li id="rp' + p.username + '" class="list-group-item">' + participants[p.username].split("_")[0] + '</li>');
 					/*$('#rp' + p.username).css('cursor', 'pointer').click(function() {
 						var username = $(this).attr('id').split("rp")[1];
 						sendPrivateMsg(username);

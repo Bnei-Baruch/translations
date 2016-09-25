@@ -71,8 +71,7 @@ function initPlugins() {
 	$(this).attr('disabled', true).unbind('click');
 	janus = new Janus({
 		server: server,
-		iceServers: [{url: "stun:v4g.kbb1.com:3478"},
-			{url: "turn:v4g.kbb1.com", credential:"tpass", username: "tuser"}],
+		iceServers: [{url: "stun:v4g.kbb1.com:3478"}],
 		success: function() {
 			attachChat();
 			$('#support').click(supportReq);

@@ -1,3 +1,5 @@
+var suproom = 1000;
+
 function attachChat() {
 	janus.attach({
 		plugin: "janus.plugin.textroom",
@@ -17,6 +19,7 @@ function attachChat() {
 		webrtcState: function(on) {
 			Janus.log("Janus says our DataChannel WebRTC PeerConnection is " + (on ? "up" : "down") + " now");
 			$("#videoleft").parent().unblock();
+			enterChat(myusername);
 		},
 		onmessage: function(msg, jsep) {
 			Janus.debug(" ::: Got a message :::");
@@ -100,20 +103,18 @@ function attachChat() {
 				var display = json["display"];
 				participants[username] = display ? display : username;
 				var displayname = participants[username].split("_")[0];
+				var role = participants[username].split("_")[1];
 				checkUser();
 				if(username !== mychatid && $('#rp' + username).length === 0 && display !== "bb_shidur") {
-					// Add to the participants list
-					$('#list').append('<li id="rp' + username + '" class="list-group-item">' + displayname + '</li>');
-					for(var i=1; i<9; i++) {
-                                        if(feeds[i] != null && feeds[i] != undefined && feeds[i].rfdisplay == display) {
-                                                feeds[i].rfchat = username;
-                                                break;
-                                                }
+					// Add to list trlchat-only users
+					if(role == "bb") {
+                                                $('#list').append('<li id="rp' + username + '" class="list-group-item">' + displayname + '</li>');
                                         }
 					datamsg = "<span style='color: green;'><i>" + displayname + "</span> joined</i><br>";
 					var user = "SYSTEM";
 					var text = displayname + " joined";
 					showMessage(user, text, datamsg);
+					// Do we need some rivate messege?
 					$('#rp' + username).css('cursor', 'pointer').click(function() {
 						var username = $(this).attr('id').split("rp")[1];
 						sendPrivateMsg(username);
@@ -161,28 +162,6 @@ function checkEnter(field, event) {
         }
 }
 
-function enterSuproom() {
-	var transaction = randomString(12);
-	var req = { textroom: "join", transaction: transaction, room: suproom, username: mychatid, display: myusername };
-	textroom.data({
-		text: JSON.stringify(req),
-		error: function(reason) {
-			bootbox.alert(reason);
-		}
-	});
-}
-
-function leaveSuproom() {
-	var transaction = randomString(12);
-        var req = { textroom: "leave", transaction: transaction, room: suproom };
-        textroom.data({
-                text: JSON.stringify(req),
-                error: function(reason) {
-                        bootbox.alert(reason);
-                }       
-        }); 
-}
-
 function enterChat(myusername) {
 	var mydisplayname = myusername.split("_")[0];
 	var userstatus = myusername.split("_")[1];
@@ -202,11 +181,6 @@ function enterChat(myusername) {
 			$('#register').removeAttr('disabled').click(registerUsername);
 			return;
 		}
-		// We're in
-		//$('#roomjoin').hide();
-		//$('#room').removeClass('hide').show();
-		//$('#participant').removeClass('hide').html(myusername).show();
-		//$('#datarecv').css('height', ($(window).height()-420)+"px");
 		$('#datasend').removeAttr('disabled');
 		// Any participants already in?
 		console.log("Participants:", response.participants);
@@ -214,23 +188,16 @@ function enterChat(myusername) {
 			for(var i in response.participants) {
 				var p = response.participants[i];
 				participants[p.username] = p.display ? p.display : p.username;
-				if(p.username !== mychatid && $('#rp' + p.username).length === 0 && p.display !== "bb_shidur") {
+				var role = p.display.split("_")[1];
+				if(p.username !== mychatid && $('#rp' + p.username).length === 0 && p.display !== "bb_shidur" && role == "bb") {
 					$('#list').append('<li id="rp' + p.username + '" class="list-group-item">' + participants[p.username].split("_")[0] + '</li>');
-					// Make videoroom and chat plugin connection
-					for(var i=1; i<9; i++) {
-                                        if(feeds[i] != null && feeds[i] != undefined && feeds[i].rfdisplay == p.display) {
-                                                feeds[i].rfchat = p.username;
-                                                break;
-						}
-					}
+					// Private chat: do we need this?
 					$('#rp' + p.username).css('cursor', 'pointer').click(function() {
 						var username = $(this).attr('id').split("rp")[1];
 						sendPrivateMsg(username);
 					});
 				}
 				checkUser();
-				//$('#datarecv').append('<p><i style="color: green;">' + participants[p.username] + ' joined</i></p>');
-				//$('#datarecv').get(0).scrollTop = $('#datarecv').get(0).scrollHeight;				
 			}
 		}
 	};
