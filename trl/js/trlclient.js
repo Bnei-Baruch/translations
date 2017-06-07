@@ -2,9 +2,8 @@ var server = null;
 var srv = "v4g.kbb1.com";
 if(window.location.protocol === 'http:')
 	window.location = "https://" + srv + "/trl"; 
-        //server = "http://" + srv + ":8088/janus";
 else
-        server = "https://" + srv + ":8889/janus";
+	server = "https://" + srv + "/janustrl";
 
 var janus = null;
 var mcutest = null;
@@ -73,7 +72,8 @@ var lnglist = {
 	"Norvegian"	:5540,
 	"Latvian"	:5560,
 	"Ukrainian"	:5580,
-	"Niderland"	:5600
+	"Niderland"     :5600,
+        "China"         :5620
 	}
 
 if(localStorage.translate) {
@@ -116,6 +116,12 @@ $(document).on('click', '#deviceslist li a', function () {
         //}
 });
 
+$(document).on('keydown', function(e) {
+	  if (e.keyCode === 18) {
+		console.log("--:: ALT key pressed!");
+	  }
+});
+
 $(document).ready(function() {
 	intializePlayer();
 	initDevices();
@@ -138,14 +144,17 @@ $(document).ready(function() {
 	if(translate != undefined && translate != null) {
 		$('#translate').removeClass('hide').html("Translate to: " + localStorage.translatetext).show();
 	}
+
 	if(device == "default") {
 		$('#devices').removeClass('hide').html("Input: Default").show();
 	} else {
 		$('#devices').removeClass('hide').html("Input: " + localStorage.devicetext).show();
 	}
+
 	if(translate != undefined && translate != null) {
 		$('#start').removeClass('disabled');
 	}
+
 	Janus.init({ debug: true, callback: function() {
 		$('#start').click(initPlugins);
 		}
@@ -206,10 +215,10 @@ function attachVideo() {
 			enterChat(myusername);
 		},
 		onmessage: function(msg, jsep) {
-			console.log(" ::: Got a message (publisher) :::");
-			console.log(JSON.stringify(msg));
+			//console.log(" ::: Got a message (publisher) :::");
+			//console.log(JSON.stringify(msg));
 			var event = msg["videoroom"];
-			console.log("Event: " + event);
+			//console.log("Event: " + event);
 			if(event != undefined && event != null) {
 				if(event === "joined") {
 					// Publisher/manager created, negotiate WebRTC and attach to existing feeds, if any
@@ -225,8 +234,29 @@ function attachVideo() {
 						for(var f in list) {
 							var id = list[f]["id"];
 							var displayname = list[f]["display"];
+							var talk = list[f]["talking"];
 							getListener(id, displayname);
-							newRemoteFeed(id, displayname)
+							newRemoteFeed(id, displayname, talk)
+						}
+					}
+				} else if(event === "talking") {
+					var tid = msg["id"];
+					var troom = msg["room"];
+					console.log("TRL "+tid+" - start talking");
+					for(var i=1; i<9; i++) {
+                                                if(feeds[i] != null && feeds[i] != undefined && feeds[i].rfid == tid) {
+                                                        var chatid = feeds[i].rfchat;
+                                                        $('#rp'+chatid).css('background-color', '#a9e0b5');
+                                                }
+                                        }
+				} else if(event === "stopped-talking") {
+					var tid = msg["id"];
+                                        var troom = msg["room"];
+					console.log("TRL "+tid+" - stop talking");
+					for(var i=1; i<9; i++) {
+						if(feeds[i] != null && feeds[i] != undefined && feeds[i].rfid == tid) {
+							var chatid = feeds[i].rfchat;
+							$('#rp'+chatid).css('background-color', 'white');
 						}
 					}
 				} else if(event === "destroyed") {
@@ -545,7 +575,7 @@ function toggleMute() {
 		mystream.getAudioTracks()[0].enabled = false;
 		console.log("Audio is ON");
 		if(datalive !== null) {
-		sendMicst('Off');
+		//sendMicst('Off');
 		}
 	} else {
 		document.getElementById("mute").value="Off";
@@ -554,7 +584,7 @@ function toggleMute() {
         	$('#mute').html("ON&nbsp;").show();
 		mystream.getAudioTracks()[0].enabled = true;
 		console.log("Audio is OFF");
-		sendMicst('On');
+		//sendMicst('On');
 	}
 }
 
@@ -566,27 +596,6 @@ function sendMicst(micst) {
                         success: function() { console.log(" -- Status Mic sent!"); },
         });
 }
-
-/*
-function getSupport() {
-        var supstatus = document.getElementById('support').value;
-	console.log("-- :: Button is clicked:"+supstatus);
-        if(supstatus == "Support") {
-                document.getElementById("support").value="Thanks";
-                $('#support').removeClass('btn-success');
-                $('#support').addClass('btn-success');
-                $('#support').html(" Thanks").show();
-                console.log("-- :: Calling for support");
-		supportReq();
-        } else {
-                document.getElementById("support").value="Support";
-                $('#support').removeClass('btn-success');
-                $('#support').addClass('btn-primary');
-                $('#support').html("Support").show();
-                console.log("-- :: Support is not need anymore");
-        }
-}
-*/
 
 function unpublishOwnFeed() {
 	// Unpublish our stream
@@ -671,7 +680,7 @@ function attachStreamingHandle(streamId, mediaElementSelector) {
             },
             onremotestream: function(stream) {
                 console.debug("Got a remote stream!", stream);
-                attachMediaStream($(mediaElementSelector).get(0), stream);
+                Janus.attachMediaStream($(mediaElementSelector).get(0), stream);
                 janusStream = stream;
             },
             oncleanup: function() {
@@ -679,16 +688,6 @@ function attachStreamingHandle(streamId, mediaElementSelector) {
             }
         });
 }
-
-$(window).unload(function () {
-            pluginHandles.forEach(function (handle) {
-                var body = { "request": "stop" };
-                handle.send({"message": body});
-                handle.hangup();
-            });
-
-            janus.destroy();
-});
 
 function onStreamingMessage(handle, msg, jsep) {
         console.debug("Got a message", msg);
@@ -715,7 +714,7 @@ function onStreamingMessage(handle, msg, jsep) {
         }
 }
 
-function newRemoteFeed(id, display) {
+function newRemoteFeed(id, display, talk) {
 	var remoteFeed = null;
 	janus.attach({
 	    plugin: "janus.plugin.videoroom",
@@ -748,6 +747,9 @@ function newRemoteFeed(id, display) {
 	                            }
 	                            remoteFeed.rfid = msg["id"];
 	                            remoteFeed.rfdisplay = msg["display"];
+				    remoteFeed.talk = talk;
+				    remoteFeed.talktime = 0;
+				    remoteFeed.talkcounter = 1;
 	                            console.log("Successfully attached to feed " + remoteFeed.rfid + " (" + remoteFeed.rfdisplay + ") in room " + msg["room"]);
 	                            rmusername = remoteFeed.rfdisplay;
 	                            $('#remote'+remoteFeed.rfindex).removeClass('hide').html(remoteFeed.rfdisplay).show();
@@ -794,8 +796,8 @@ function newRemoteFeed(id, display) {
 			document.body.appendChild(trlAudio);
 			trlAudio.volume = trlaud.volume;
 			trlAudio.muted = trlaud.muted;
-	            attachMediaStream($('#a'+remoteFeed.rfid).get(0), stream);
-			var streamElementMuter = new StreamElementMuter(stream, remoteFeed.rfdisplay, remoteFeed.rfindex);
+	            Janus.attachMediaStream($('#a'+remoteFeed.rfid).get(0), stream);
+			//var streamElementMuter = new StreamElementMuter(stream, remoteFeed.rfdisplay, remoteFeed.rfindex);
 	            $('#trl2panel').removeClass('hide').show();
 	            $('#datain').removeClass('hide').show();
 	            $('#dataout').removeClass('hide').show();
@@ -807,23 +809,7 @@ function newRemoteFeed(id, display) {
 	            $('#datasend').removeAttr('disabled');
 	    },
 	ondata: function(data) {
-		/*
-		var dataparse = data.split(":");
-		Janus.debug("We got data from: " + data);
-		Janus.debug(" -- Split data: " + dataparse[0]);
-		if(dataparse[0] === "micst") {
-			Janus.debug(" -- Going to select userid: " + dataparse[1]);
-			if(dataparse[2] === "Off") { 
-				Janus.debug(" -- User ID: " + dataparse[1] + " mic is closed!");
-				$('#rp'+dataparse[1]).css('background-color', 'white'); 
-			}
-			if(dataparse[2] === "On") { 
-				Janus.debug(" -- User ID: " + dataparse[1] + " mic is open!");
-				$('#rp'+dataparse[1]).css('background-color', '#a9e0b5'); 
-				
-			}
-		}
-		*/
+		console.log("Here happend something?");
 	},
         oncleanup: function() {
             console.log(" ::: Got a cleanup notification (remote feed " + id + ") :::");

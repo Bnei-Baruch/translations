@@ -73,6 +73,7 @@ function attachChat() {
 				msg = msg.replace(new RegExp('<', 'g'), '&lt');
 				msg = msg.replace(new RegExp('>', 'g'), '&gt');
 				var from = json["from"];
+				var timest = chatTime(json["date"]);
 				var whisper = json["whisper"];
 				if(whisper === true) {
 					// Private message
@@ -91,7 +92,7 @@ function attachChat() {
 					} else {
 						var style = "style='color: red'";	
 					}
-					datamsg = "<span " +  style +  ">" + user + "</span>" + " : " + text + "<br>";
+					datamsg = "<i>("+timest+") </i><span " +  style +  ">" + user + "</span>" + " : " + text + "<br>";
 					showMessage(user, text, datamsg);
 				}
 			} else if(what === "join" && chatroom !== suproom) {
@@ -146,6 +147,16 @@ function attachChat() {
 			$('#datasend').attr('disabled', true);
 		}
 	});
+}
+
+function chatTime(t) {
+        var date = new Date(t);
+        var h = date.getHours();
+        var m = date.getMinutes();
+        var s = date.getSeconds();
+        var s = (s < 10) ? '0' + s : s;
+        var d =  [h, m, s].join(':');
+        return d;
 }
 
 function checkEnter(field, event) {
@@ -203,10 +214,6 @@ function enterChat(myusername) {
 			return;
 		}
 		// We're in
-		//$('#roomjoin').hide();
-		//$('#room').removeClass('hide').show();
-		//$('#participant').removeClass('hide').html(myusername).show();
-		//$('#datarecv').css('height', ($(window).height()-420)+"px");
 		$('#datasend').removeAttr('disabled');
 		// Any participants already in?
 		console.log("Participants:", response.participants);
@@ -220,6 +227,8 @@ function enterChat(myusername) {
 					for(var i=1; i<9; i++) {
                                         if(feeds[i] != null && feeds[i] != undefined && feeds[i].rfdisplay == p.display) {
                                                 feeds[i].rfchat = p.username;
+                                                if(feeds[i].talk)
+                                                        $('#rp'+p.username).css('background-color', '#a9e0b5');
                                                 break;
 						}
 					}
@@ -229,8 +238,6 @@ function enterChat(myusername) {
 					});
 				}
 				checkUser();
-				//$('#datarecv').append('<p><i style="color: green;">' + participants[p.username] + ' joined</i></p>');
-				//$('#datarecv').get(0).scrollTop = $('#datarecv').get(0).scrollHeight;				
 			}
 		}
 	};
@@ -335,6 +342,9 @@ function notifyMe(title, message, tout) {
                         body: message,
 			requireInteraction: tout
                 });
+		notification.onclick = function () {
+                        window.focus();
+                }
         }
 }
 
