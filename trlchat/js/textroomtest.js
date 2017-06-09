@@ -82,6 +82,7 @@ function attachChat() {
 				msg = msg.replace(new RegExp('>', 'g'), '&gt');
 				var from = json["from"];
 				var whisper = json["whisper"];
+				var timest = chatTime(json["date"]);
 				if(whisper === true) {
 					// Private message
 					$('#datarecv').append('<p style="color: purple;"><b>[whisper from ' + participants[from].split("_")[0] + ']</b> ' + msg);
@@ -98,7 +99,7 @@ function attachChat() {
                                         } else {
                                                 var style = "style='color: red'";
                                         }
-                                        datamsg = "<span " +  style +  ">" + user + "</span>" + " : " + text + "<br>";
+                                        datamsg = "<i>("+timest+") </i><span " +  style +  ">" + user + "</span>" + " : " + text + "<br>";
                                         showMessage(user, text, datamsg);
 				}
 			} else if(what === "join") {
@@ -147,6 +148,16 @@ function attachChat() {
 			$('#datasend').attr('disabled', true);
 		}
 	});
+}
+
+function chatTime(t) {
+	var date = new Date(t);
+	var h = date.getHours();
+	var m = date.getMinutes();
+	var s = date.getSeconds();
+	var s = (s < 10) ? '0' + s : s;
+	var d =  [h, m, s].join(':');
+	return d;
 }
 
 function checkEnter(field, event) {
@@ -367,6 +378,9 @@ function notifyMe(title, message) {
                         icon: 'nlogo.png',
                         body: message,
                 });
+		notification.onclick = function () {
+			window.focus();
+		}
         }
 }
 

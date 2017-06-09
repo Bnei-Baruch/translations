@@ -71,6 +71,7 @@ function attachChat() {
 				msg = msg.replace(new RegExp('>', 'g'), '&gt');
 				var from = json["from"];
 				var fromroom = json["room"];
+				var timest = chatTime(json["date"]);
 				var whisper = json["whisper"];
 				if(whisper === true) {
 					// Private message
@@ -86,7 +87,7 @@ function attachChat() {
 					// Public message
 					var user = participants[from].split("_")[0];
 					var text = msg;
-					datamsg = "<span style='color: #2fa4e7'>" + user + "</span>" + " : " + text + "<br>";
+					datamsg = "<i>("+timest+") </i><span style='color: #2fa4e7'>" + user + "</span>" + " : " + text + "<br>";
 					showMessage(user, text, datamsg);
 				}
 			} else if(what === "join") {
@@ -101,7 +102,7 @@ function attachChat() {
 					chatrooms[fromroom][username] = display;
 					if(fromroom === roomid && role == "bb") {
 						// Add to the participants list
-						$('#sessions-list').append('<li id="rp' + username + '" class="list-group-item">' + displayname + '</li>');
+						//$('#sessions-list').append('<li id="rp' + username + '" class="list-group-item">' + displayname + '</li>');
 						/*/ No private message
 						$('#rp' + username).css('cursor', 'pointer').click(function() {
 							var username = $(this).attr('id').split("rp")[1];
@@ -138,6 +139,16 @@ function attachChat() {
 			$('#datasend').attr('disabled', true);
 		}
 	});
+}
+
+function chatTime(t) {
+        var date = new Date(t);
+        var h = date.getHours();
+        var m = date.getMinutes();
+        var s = date.getSeconds();
+        var s = (s < 10) ? '0' + s : s;
+        var d =  [h, m, s].join(':');
+        return d;
 }
 
 function checkEnter(field, event) {
@@ -184,10 +195,9 @@ function enterChat(roomid) {
 				var p = response.participants[i];
 				participants[p.username] = p.display ? p.display : p.username;
 				if(p.username !== mychatid && $('#rp' + p.username).length === 0) {
-					//chatrooms[roomid][p.username] = p.display ;
 					chatrooms[roomid][p.username] = p.display;
 					// Add to the participants list
-					$('#list').append('<li id="rp' + p.username + '" class="list-group-item">' + participants[p.username].split("_")[0] + '</li>');
+					//$('#list').append('<li id="rp' + p.username + '" class="list-group-item">' + participants[p.username].split("_")[0] + '</li>');
 					/*$('#rp' + p.username).css('cursor', 'pointer').click(function() {
 						var username = $(this).attr('id').split("rp")[1];
 						sendPrivateMsg(username);
@@ -255,6 +265,9 @@ function notifyMe(title, message, tout) {
                         body: message,
                         requireInteraction: tout
                 });
+		notification.onclick = function () {
+                        window.focus();
+                }
         }
 }
 

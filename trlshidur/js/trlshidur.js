@@ -1,9 +1,9 @@
 var srv = "v4g.kbb1.com";
 var server = null;
 if(window.location.protocol === 'http:')
-	server = "http://" + srv + ":8088/janus";
+	server = "http://" + srv + "/janustrl";
 else
-	server = "https://" + srv + ":8889/janus";
+	server = "https://" + srv + "/janustrl";
 
 var janus = null;
 var mcutest = null;
@@ -59,13 +59,14 @@ var roomlist = {
         1530 : "Norvegian",
         1540 : "Latvian",
         1550 : "Ukrainian",
-        1560 : "Niderland"
+        1560 : "Niderland",
+	1570 : "China"
         }
 
 $(document).ready(function() {
 	intializePlayer();
 	// Initialize the library (console debug enabled)
-	Janus.init({ debug: true, callback: initPlugin });
+	Janus.init({ debug: false, callback: initPlugin });
 });
 
 function initPlugin() {
@@ -129,8 +130,29 @@ function attachHandle(roomid) {
 						for(var f in list) {
 							var id = list[f]["id"];
 							var displayname = list[f]["display"];
+							var talk = list[f]["talking"];
 							getListener(id, displayname);
-							newRemoteFeed(id, displayname)
+							newRemoteFeed(id, displayname, talk)
+						}
+					}
+				} else if(event === "talking") {
+                                                var tid = msg["id"];
+                                                var troom = msg["room"];
+                                                console.log("TRL "+tid+" - start talking");
+                                                for(var i=1; i<9; i++) {
+                                                        if(feeds[i] != null && feeds[i] != undefined && feeds[i].rfid == tid) {
+                                                                var chatid = feeds[i].rfid;
+                                                                $('#'+chatid).css('background-color', '#a9e0b5');
+                                                        }
+                                                }
+				} else if(event === "stopped-talking") {
+					var tid = msg["id"];
+					var troom = msg["room"];
+					console.log("TRL "+tid+" - stop talking");
+					for(var i=1; i<9; i++) {
+						if(feeds[i] != null && feeds[i] != undefined && feeds[i].rfid == tid) {
+							var chatid = feeds[i].rfid;
+							$('#'+chatid).css('background-color', 'white');
 						}
 					}
 				} else if(event === "destroyed") {
@@ -264,7 +286,7 @@ function getRooms() {
 					for(var i in chatrooms[roomid]) {
 						var role = chatrooms[roomid][i].split("_")[1];
 						if(role == "bb") {
-							$('#sessions-list').append('<li id="rp' + i + '" class="list-group-item">' + chatrooms[roomid][i].split("_")[0] + '</li>');
+							//$('#sessions-list').append('<li id="rp' + i + '" class="list-group-item">' + chatrooms[roomid][i].split("_")[0] + '</li>');
 						}
 					}
 					if(myid) {
@@ -364,7 +386,7 @@ function checkEnter(event) {
         }
 }
 
-function newRemoteFeed(id, display) {
+function newRemoteFeed(id, display, talk) {
 	// A new feed has been published, create a new plugin handle and attach to it as a listener
 	var remoteFeed = null;
 	janus.attach(
@@ -399,6 +421,9 @@ function newRemoteFeed(id, display) {
 						}
 						remoteFeed.rfid = msg["id"];
 						remoteFeed.rfdisplay = msg["display"];
+						remoteFeed.talk = talk;
+						if(talk)
+							$('#'+remoteFeed.rfid).css('background-color', '#a9e0b5');
 						console.log("Successfully attached to feed " + remoteFeed.rfid + " (" + remoteFeed.rfdisplay + ") in room " + msg["room"]);
 						rmusername = remoteFeed.rfdisplay;
 					} else if(msg["error"] !== undefined && msg["error"] !== null) {
@@ -444,7 +469,7 @@ function newRemoteFeed(id, display) {
                                 document.body.appendChild(trlAudio);
                                 trlAudio.volume = trlaud.volume;
                                 trlAudio.muted = trlaud.muted;
-                                attachMediaStream($('#a'+remoteFeed.rfid).get(0), stream);
+                                Janus.attachMediaStream($('#a'+remoteFeed.rfid).get(0), stream);
 				$('#trl2panel').removeClass('hide').show();
 				$('#datain').removeClass('hide').show();
                                 $('#dataout').removeClass('hide').show();
