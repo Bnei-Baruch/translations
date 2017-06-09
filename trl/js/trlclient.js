@@ -155,7 +155,7 @@ $(document).ready(function() {
 		$('#start').removeClass('disabled');
 	}
 
-	Janus.init({ debug: true, callback: function() {
+	Janus.init({ debug: false, callback: function() {
 		$('#start').click(initPlugins);
 		}
 	});
@@ -516,13 +516,11 @@ function setDevices() {
 
 
 function publishOwnFeed(useAudio) {
-	mcutest.createOffer(
-		{
+	mcutest.createOffer({
 			media: { audioRecv: false, videoRecv: false, audioSend: true , videoSend: false, audio: {
-					deviceId: {
-						exact: device
-					}
-				}, data: true },
+                                        deviceId: { exact: device }
+                                        }
+                                },
 			//media: { audioRecv: false, videoRecv: false, audioSend: true , videoSend: false, audio: useAudio, data: true },
 			success: function(jsep) {
 				console.log("Got publisher SDP!");
@@ -766,7 +764,7 @@ function newRemoteFeed(id, display, talk) {
 			// Answer and attach
 			remoteFeed.createAnswer({
 			    jsep: jsep,
-			    media: { audioSend: false, video: false , data: true},  // We want recvonly audio/video
+			    media: { audioSend: false, video: false },  // We want recvonly audio/video
 			    success: function(jsep) {
 				console.log("Got SDP!");
 				var body = { "request": "start", "room": room };
