@@ -73,8 +73,7 @@ function initPlugin() {
 	// Create session
 	janus = new Janus({
 		server: server,
-		iceServers: [{url: "stun:v4g.kbb1.com:3478"},
-		{url: "turn:v4g.kbb1.com", credential:"tpass", username: "tuser"}],
+		iceServers: [{urls: "stun:v4g.kbb1.com:3478"}],
 		success: function() {
 			//supportHandle();
 			attachHandle();

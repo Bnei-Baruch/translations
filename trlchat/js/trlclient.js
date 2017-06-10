@@ -102,26 +102,20 @@ $(document).on('click', '#translatelist li a', function () {
 	}
 });
 
-$(document).on('click', '#deviceslist li a', function () {
-        console.log("Selected Option:"+$(this).text());
-        device = $(this).attr("id");
-        localStorage.device = device;
-        localStorage.devicetext = $(this).text();
-        devicetext = localStorage.devicetext;
-        console.log("  -- Selected Device: " + devicetext);
-        $('#devices').removeClass('hide').html("Input: " + $(this).text()).show();
-	micLevel();
-        //if(translate != undefined && translate != null) {
-          //      $('#start').removeClass('disabled');
-        //}
+$(document).ready(function() {
+        if(translate != undefined && translate != null) {
+                $('#translate').removeClass('hide').html("Translate: " + localStorage.translatetext).show();
+        }
+        if(translate != undefined && translate != null) {
+                $('#start').removeClass('disabled');
+        }
+        Janus.init({ debug: true, callback: function() {
+                $('#start').click(initPlugins);
+                }
+        });
 });
 
-$(document).on('keydown', function(e) {
-	  if (e.keyCode === 18) {
-		console.log("--:: ALT key pressed!");
-	  }
-});
-
+/*
 $(document).ready(function() {
 	intializePlayer();
 	initDevices();
@@ -155,11 +149,12 @@ $(document).ready(function() {
 		$('#start').removeClass('disabled');
 	}
 
-	Janus.init({ debug: false, callback: function() {
+	Janus.init({ debug: true, callback: function() {
 		$('#start').click(initPlugins);
 		}
 	});
 });
+*/
 
 function initPlugins() {
 	if(started)
@@ -171,6 +166,7 @@ function initPlugins() {
 		iceServers: [{urls: "stun:v4g.kbb1.com:3478"}],
 		success: function() {
 			attachVideo();
+			//attachChat();
 			$('#support').click(supportReq);
 		},
 		error: function(error) {
@@ -189,15 +185,20 @@ function attachVideo() {
 	janus.attach({ plugin: "janus.plugin.videoroom",
 		success: function(pluginHandle) {
 			$('#details').remove();
+			$('#translate').addClass('disabled');
 			mcutest = pluginHandle;
 			console.log("Plugin attached! (" + mcutest.getPlugin() + ", id=" + mcutest.getId() + ")");
 			console.log("  -- This is a publisher/manager");
 			// Prepare the username registration
-			registerUsername();
+			//registerUsername();
+			$('#roomjoin').removeClass('hide').show();
+			$('#registernow').removeClass('hide').show();
+			$('#register').click(registerUsername);
 			$('#start').removeAttr('disabled').html("Disconnect")
 				.click(function() {
 					$(this).attr('disabled', true);
-					janus.destroy();
+					window.location.reload();
+					//janus.destroy();
 				});
 
 		},
@@ -211,7 +212,7 @@ function attachVideo() {
 		webrtcState: function(on) {
 			Janus.log("Janus says our WebRTC PeerConnection is " + (on ? "up" : "down") + " now");
 			// Enter chat with videoroom plugin username
-			enterChat(myusername);
+			//enterChat(myusername);
 		},
 		onmessage: function(msg, jsep) {
 			//console.log(" ::: Got a message (publisher) :::");
@@ -228,7 +229,7 @@ function attachVideo() {
 					if(msg["publishers"] !== undefined && msg["publishers"] !== null) {
 						var list = msg["publishers"];
 						console.log("Got a list of available publishers/feeds:");
-						getFWlist(setPort);
+						//getFWlist(setPort);
 						console.log(list);
 						for(var f in list) {
 							var id = list[f]["id"];
@@ -416,46 +417,6 @@ function attachVideo() {
 	});
 }
 
-function getFWlist(setPort) {
-	var req = {"request":"listforwarders", "room":room, "secret":"adminpwd"};
-	mcutest.send ({"message": req,
-        success: function(data) {
-                for(var i=0; i<data.rtp_forwarders.length; i++) {
-                        var fwname = data.rtp_forwarders[i].display;
-                        var fwid = data.rtp_forwarders[i].publisher_id;
-                                for(var p=0; p<data.rtp_forwarders[i].rtp_forwarder.length; p++) {
-                                        if(data.rtp_forwarders[i].rtp_forwarder[p].audio_stream_id !== undefined) {
-                                                var aport = data.rtp_forwarders[i].rtp_forwarder[p].port;
-                                                fwlist.push(aport);
-                                        }
-                                }
-                        }
-	setPort(fwlist);
-                }
-        });
-}
-
-function setPort(fwlist) {
-	if(fwlist.length == 0) {
-		console.log("-- ::We alone here");
-		console.log("--  Going to set: "+fwport+" port");
-		startForward();
-	} else if(fwlist.length == 9) {
-		console.log("-- ::Only 9 Translator avalabale - exiting!");
-		window.alert("Only 9 connection possible");
-		janus.destroy();
-	} else {
-		do {
-		    console.log("--  Port: "+fwport+" TAFUS");
-		    fwport = fwport + 1;
-		    console.log("--  Let's check: "+fwport+" port");
-		    var result = $.inArray(fwport, fwlist);
-		} while (result !== -1)
-	console.log("--  Going to set: "+fwport+" port");
-	startForward();
-	}
-}
-
 function getListener(id, display) {
 	var dparse = display.split("_");
         var displayname = dparse[0];
@@ -473,56 +434,34 @@ function getListener(id, display) {
 }
 
 function registerUsername() {
-	var username = $('#displayname').val();
-	var username = username + "_trl";
-	var register = { "request": "join", "room": room, "ptype": "publisher", "display": username };
-	myusername = username ;
-	localStorage.username = myusername;
-	var dparse = myusername.split("_");
-	mydisplayname = dparse[0];
-	mcutest.send({"message": register});
-	// Here we going to attach Chat plugin
-	attachChat();
-}
-
-function initDevices(devices) {
-	navigator.mediaDevices.enumerateDevices().then(function(devices) {
-		devices.forEach(function(device) {
-			var option = $("'<li><a href='#' id='" + device.deviceId + "'>" + device.label + "</a></li>");
-			if(device.kind === 'audioinput') {
-				$('#deviceslist').append(option);
-			} else if(device.kind === 'videoinput') {
-				$('#video-device').append(option);
-			}
-		});
-		setDevices();
-	});
-
-}
-
-function setDevices() {
-	if(localStorage.device) {
-		console.log("  -- Storage Device: " + localStorage.device);
-		console.log("  -- Storage Device Text: " + localStorage.devicetext);
-		device = localStorage.device;
-		devicetext = localStorage.devicetext;
-		micLevel();
-	} else {
-		device = "default";
-		micLevel();
+	if($('#username').length === 0) {
+                $('#register').click(registerUsername);
+                $('#username').focus();
+        } else {
+		var username = $('#username').val();
+		var username = username + "_bb";
+		var register = { "request": "join", "room": room, "ptype": "publisher", "display": username };
+		myusername = username ;
+		localStorage.username = myusername;
+		var dparse = myusername.split("_");
+		mydisplayname = dparse[0];
+		$('#roomjoin').addClass('hide').show();
+		mcutest.send({"message": register});
+		// Here we going to attach Chat plugin
+		//enterChat(myusername);
+		attachChat();
 	}
 }
 
-
 function publishOwnFeed(useAudio) {
-	mcutest.createOffer({
-			media: { audioRecv: false, videoRecv: false, audioSend: true , videoSend: false, audio: {deviceId: device }},
-			//media: { audioRecv: false, videoRecv: false, audioSend: true , videoSend: false, audio: useAudio, data: true },
+	mcutest.createOffer(
+		{
+			media: { audioRecv: false, videoRecv: false, audioSend: false , videoSend: false, data: true},
 			success: function(jsep) {
 				console.log("Got publisher SDP!");
 				console.log(jsep);
 				JSON.stringify(jsep)
-				var publish = { "request": "configure", "audio": true, "video": false };
+				var publish = { "request": "configure", "audio": false, "video": false };
 				mcutest.send({"message": publish, "jsep": jsep});
 			},
 			error: function(error) {
@@ -760,7 +699,7 @@ function newRemoteFeed(id, display, talk) {
 			// Answer and attach
 			remoteFeed.createAnswer({
 			    jsep: jsep,
-			    media: { audioSend: false, video: false },  // We want recvonly audio/video
+			    media: { audio: false, video: false },  // We want recvonly audio/video
 			    success: function(jsep) {
 				console.log("Got SDP!");
 				var body = { "request": "start", "room": room };
@@ -782,6 +721,7 @@ function newRemoteFeed(id, display, talk) {
 	    },
 	    onremotestream: function(stream) {
 	            console.log("Remote feed #" + remoteFeed.rfindex);
+			/*
 	            trlAudio = document.createElement('audio');
 			trlAudio.setAttribute('id', 'a'+remoteFeed.rfid);
 			trlAudio.setAttribute('class', 'trldAudio');
@@ -791,7 +731,7 @@ function newRemoteFeed(id, display, talk) {
 			trlAudio.volume = trlaud.volume;
 			trlAudio.muted = trlaud.muted;
 	            Janus.attachMediaStream($('#a'+remoteFeed.rfid).get(0), stream);
-			//var streamElementMuter = new StreamElementMuter(stream, remoteFeed.rfdisplay, remoteFeed.rfindex);
+			*/
 	            $('#trl2panel').removeClass('hide').show();
 	            $('#datain').removeClass('hide').show();
 	            $('#dataout').removeClass('hide').show();

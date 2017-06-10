@@ -144,8 +144,6 @@ Janus.init = function(options) {
 				} else {
 					Janus.error("Error attaching stream to element");
 				}
-			} else if(adapter.browserDetails.browser === 'safari' || window.navigator.userAgent.match(/iPad/i) || window.navigator.userAgent.match(/iPhone/i)) {
-				element.src = URL.createObjectURL(stream);
 			} else {
 				element.srcObject = stream;
 			}
@@ -768,6 +766,11 @@ function Janus(gatewayCallbacks) {
 			request["token"] = token;
 		if(apisecret !== null && apisecret !== undefined)
 			request["apisecret"] = apisecret;
+		// If we know the browser supports BUNDLE and/or rtcp-mux, let's advertise those right away
+		if(adapter.browserDetails.browser == "chrome" || adapter.browserDetails.browser == "firefox") {
+			request["force-bundle"] = true;
+			request["force-rtcp-mux"] = true;
+		}
 		if(websockets) {
 			transactions[transaction] = function(json) {
 				Janus.debug(json);
