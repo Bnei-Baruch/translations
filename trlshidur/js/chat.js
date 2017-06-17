@@ -15,7 +15,6 @@ function attachChat() {
 		},
 		webrtcState: function(on) {
 			Janus.log("Janus says our DataChannel WebRTC PeerConnection is " + (on ? "up" : "down") + " now");
-			$("#videoleft").parent().unblock();
 		},
 		onmessage: function(msg, jsep) {
 			Janus.debug(" ::: Got a message :::");

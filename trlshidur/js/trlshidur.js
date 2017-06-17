@@ -271,10 +271,17 @@ function getRooms() {
 	var req = { "request":"list" };
 	mcutest.send({"message": req,
 		success: function(data) {
-			for(var f in data.list) {
-				var room = data.list[f]["room"];
-				var roomname = data.list[f]["description"];
-				var pnum = data.list[f]["num_participants"];
+			var rooms = data;
+                        slist = rooms.list.slice(0);
+                        slist.sort(function(a,b) {
+                            var x = a.description.toLowerCase();
+                            var y = b.description.toLowerCase();
+                            return x < y ? -1 : x > y ? 1 : 0;
+                        });
+                        for(var f in slist) {
+                                var room = slist[f]["room"];
+                                var roomname = slist[f]["description"];
+                                var pnum = slist[f]["num_participants"];
 				//console.log("--::"+roomid+" : "+roomname+" : "+pnum);
 				$('#rooms-list').append('<a id="'+room+'" href="#" class="list-group-item">'+roomname+'<span id="'+room+'-pnum" style="float: right;">('+pnum+')</span></a>');
 				$('#'+room).click(function() {
