@@ -29,7 +29,8 @@ function oidcLogin() {
 			console.log("Hi: ",user.profile);
 			var at = KJUR.jws.JWS.parse(user.access_token);
 			console.log(at);
-			if(at.payloadObj.realm_access.roles[0] === "bb_user") {
+			var roles = at.payloadObj.realm_access.roles;
+			if(roles.filter(role => role.match(/^(bb_user|trl_user)$/)).length > 0) {
 				trluser = user.profile;
 				checkDevices();
 			} else {
