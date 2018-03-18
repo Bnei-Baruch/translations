@@ -1,121 +1,121 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>BB Translation System</title>
-<script type="text/javascript" src="../js/oidc-client.min.js"></script>
-<script type="text/javascript" src="../js/jsrsasign-all-min.js"></script>
-<script type="text/javascript" src="../js/jquery-1.9.1.min.js" ></script>
-<script type="text/javascript" src="../js/trlauth.js"></script>
-<script type="text/javascript" src="../js/bootstrap.min.js"></script>
-<script type="text/javascript" src="../js/bootbox.min.js"></script>
-<script type="text/javascript" src="../js/control.js"></script>
-<script type="text/javascript" src="../js/adapter.js" ></script>
-<script type="text/javascript" src="../js/janus.js" ></script>
-<script type="text/javascript" src="../js/vmeter.js"></script>
-<script type="text/javascript" src="../js/trlclient.js"></script>
-<script type="text/javascript" src="../js/chat.js"></script>
-<link rel="stylesheet" href="../css/bootstrap.min.css" type="text/css"/>
-<link rel="stylesheet" href="../css/demo.css" type="text/css"/>
-<link rel="stylesheet" href="../css/font-awesome.min.css">
-<link href="../css/slider2.css" rel="stylesheet">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>BB Translation System</title>
+	<script type="text/javascript" src="../js/oidc-client.min.js"></script>
+	<script type="text/javascript" src="../js/jsrsasign-all-min.js"></script>
+	<script type="text/javascript" src="../js/jquery-1.9.1.min.js" ></script>
+	<script type="text/javascript" src="../js/trlauth.js"></script>
+	<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../js/bootbox.min.js"></script>
+	<script type="text/javascript" src="../js/control.js"></script>
+	<script type="text/javascript" src="../js/adapter.js" ></script>
+	<script type="text/javascript" src="../js/janus.js" ></script>
+	<script type="text/javascript" src="../js/vmeter.js"></script>
+	<script type="text/javascript" src="../js/trlclient.js"></script>
+	<script type="text/javascript" src="../js/chat.js"></script>
+	<link rel="stylesheet" href="../css/bootstrap.min.css" type="text/css"/>
+	<link rel="stylesheet" href="../css/demo.css" type="text/css"/>
+	<link rel="stylesheet" href="../css/font-awesome.min.css">
+	<link href="../css/slider2.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="page-header">
-					<button class="btn btn-warning disabled" autocomplete="off" id="start">Connect</button>
-                                <div class="btn-group btn-group-sm">
-                                 <button autocomplete="off" id="translate" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Translate: <span class="caret"></span></button>
-                                    <ul id="translatelist" class="dropdown-menu" role="menu">
-					<li><a href="#" id="15">Hebrew</a></li>
-					<li><a href="#" id="23">Russian</a></li>
-					<li><a href="#" id="24">English</a></li>
-					<li><a href="#" id="25">French</a></li>
-					<li><a href="#" id="26">Spanish</a></li>
-					<li><a href="#" id="27">German</a></li>
-					<li><a href="#" id="28">Italian</a></li>
-					<li><a href="#" id="42">Turkish</a></li>
-					<li><a href="#" id="41">Portuguese</a></li>
-					<li><a href="#" id="43">Bulgarian</a></li>
-					<li><a href="#" id="44">Georgian</a></li>
-					<li><a href="#" id="45">Romanian</a></li>
-					<li><a href="#" id="46">Hungarian</a></li>
-					<li><a href="#" id="47">Swedish</a></li>
-					<li><a href="#" id="48">Lithuanian</a></li>
-					<li><a href="#" id="49">Croatian</a></li>
-					<li><a href="#" id="50">Japanese</a></li>
-					<li><a href="#" id="51">Slovenian</a></li>
-					<li><a href="#" id="52">Polish</a></li>
-					<li><a href="#" id="53">Norvegian</a></li>
-					<li><a href="#" id="54">Latvian</a></li>
-					<li><a href="#" id="55">Ukrainian</a></li>
-					<li><a href="#" id="56">Niderland</a></li>
-					<li><a href="#" id="57">China</a></li>
-                                    </ul>
-                                </div>
+				<button class="btn btn-warning disabled" autocomplete="off" id="start">Connect</button>
 				<div class="btn-group btn-group-sm">
-				<button autocomplete="off" id="devices" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Input: <span class="caret"></span></button>
-				    <ul id="deviceslist" class="dropdown-menu" role="menu">
-				    </ul>
+					<button autocomplete="off" id="translate" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Translate: <span class="caret"></span></button>
+					<ul id="translatelist" class="dropdown-menu" role="menu">
+						<li><a href="#" id="15">Hebrew</a></li>
+						<li><a href="#" id="23">Russian</a></li>
+						<li><a href="#" id="24">English</a></li>
+						<li><a href="#" id="25">French</a></li>
+						<li><a href="#" id="26">Spanish</a></li>
+						<li><a href="#" id="27">German</a></li>
+						<li><a href="#" id="28">Italian</a></li>
+						<li><a href="#" id="42">Turkish</a></li>
+						<li><a href="#" id="41">Portuguese</a></li>
+						<li><a href="#" id="43">Bulgarian</a></li>
+						<li><a href="#" id="44">Georgian</a></li>
+						<li><a href="#" id="45">Romanian</a></li>
+						<li><a href="#" id="46">Hungarian</a></li>
+						<li><a href="#" id="47">Swedish</a></li>
+						<li><a href="#" id="48">Lithuanian</a></li>
+						<li><a href="#" id="49">Croatian</a></li>
+						<li><a href="#" id="50">Japanese</a></li>
+						<li><a href="#" id="51">Slovenian</a></li>
+						<li><a href="#" id="52">Polish</a></li>
+						<li><a href="#" id="53">Norvegian</a></li>
+						<li><a href="#" id="54">Latvian</a></li>
+						<li><a href="#" id="55">Ukrainian</a></li>
+						<li><a href="#" id="56">Niderland</a></li>
+						<li><a href="#" id="57">China</a></li>
+					</ul>
 				</div>
-                        </div>
+				<div class="btn-group btn-group-sm">
+					<button autocomplete="off" id="devices" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Input: <span class="caret"></span></button>
+					<ul id="deviceslist" class="dropdown-menu" role="menu">
+					</ul>
+				</div>
 			</div>
-				<button type="button" id="support" class="btn btn-primary btn-xs disabled" value="Support" style="position: absolute; top: 10px; left: 240px;"><i class="fa fa-headphones fa-lg"></i> Support Offline</button>
-			<div class="container hide" id="videos">
-				<div class="row">
-					<div class="col-md-4">
-						<div class="panel panel-default">
-                                                        <div class="panel-heading">
-                                                                <h3 class="panel-title"><span class="label label-primary hide" id="publisher"></span></h3>
-								<div id="micctlbar">
-                                                                <!--input id="micvolumeslider" type="range" min="0" max="100" value="100" step="1" style="position: absolute; bottom: 20px; right: 170px;"-->
+		</div>
+		<button type="button" id="support" class="btn btn-primary btn-xs disabled" value="Support" style="position: absolute; top: 10px; left: 240px;"><i class="fa fa-headphones fa-lg"></i> Support Offline</button>
+		<div class="container hide" id="videos">
+			<div class="row">
+				<div class="col-md-4">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title"><span class="label label-primary hide" id="publisher"></span></h3>
+							<div id="micctlbar">
+								<!--input id="micvolumeslider" type="range" min="0" max="100" value="100" step="1" style="position: absolute; bottom: 20px; right: 170px;"-->
 								<i class="fa fa-microphone fa-2x" style="position: absolute; top: 10px; right: 90px;"></i>
-                                                                <button class="btn btn-danger btn-sm" id="mute" value="Off" style="position: absolute; top: 5px; right: 40px;">OFF</button>
-                                                                </div>
-                                                        </div>
-                                                        <div class="panel-body" id="micaudio">
+								<button class="btn btn-danger btn-sm" id="mute" value="Off" style="position: absolute; top: 5px; right: 40px;">OFF</button>
+							</div>
+						</div>
+						<div class="panel-body" id="micaudio">
 							<div id="list" class="list-group"></div>
 							<div class="panel panel-default" id="meterpanel">
-                                                        <canvas id="meter" width="200" height="10"></canvas>
+								<canvas id="meter" width="200" height="10"></canvas>
 							</div>
 							<audio id="transAudio" controls autoplay></audio>
 							<audio id="mixAudio" controls autoplay></audio>
-                                                                <div class="input-group margin-bottom-sm" id="dataout" style="height: 150px;">
-                                                                <div contenteditable="true" id="datarecv" name="datarecv"></div>
-                                                        	</div>
-								<div class="input-group margin-bottom-sm" id="datain">
-                                                                <input class="form-control" id="datasend" type="text" size=40 placeholder="Write here" autocomplete="off" onkeypress="return checkEnter(this, event);" disabled></input>
-                                                                </div>
+							<div class="input-group margin-bottom-sm" id="dataout" style="height: 150px;">
+								<div contenteditable="true" id="datarecv" name="datarecv"></div>
 							</div>
-							<div class="panel-footer" id="mixfooter">
-                                                                <div id="mixctlbar">
-                                                                <h5 style="position: absolute; bottom: 66px; align: left">BB: <span class="label label-success hide" id="mixname"></span></h5>
-                                                                <input id="mixvolumeslider" type="range" min="0" max="100" value="100" step="1" style="right: 30px;">
+							<div class="input-group margin-bottom-sm" id="datain">
+								<input class="form-control" id="datasend" type="text" size=40 placeholder="Write here" autocomplete="off" onkeypress="return checkEnter(this, event);" disabled></input>
+							</div>
+						</div>
+						<div class="panel-footer" id="mixfooter">
+							<div id="mixctlbar">
+								<h5 style="position: absolute; bottom: 66px; align: left">BB: <span class="label label-success hide" id="mixname"></span></h5>
+								<input id="mixvolumeslider" type="range" min="0" max="100" value="100" step="1" style="right: 30px;">
 								<i class="fa fa-language fa-2x" style="position: absolute; bottom: 66px; right: 83px;"></i>
-                                                                <button class="btn btn-warning btn-sm" id="mixmutebtn" style="position: absolute; bottom: 66px; right: 40px;"><span class="glyphicon glyphicon-volume-off"></span></button>
-                                                                </div>
-                                                        </div>
-							<div class="panel-footer" id="trlfooter">
-                                                                <div id="trlctlbar">
+								<button class="btn btn-warning btn-sm" id="mixmutebtn" style="position: absolute; bottom: 66px; right: 40px;"><span class="glyphicon glyphicon-volume-off"></span></button>
+							</div>
+						</div>
+						<div class="panel-footer" id="trlfooter">
+							<div id="trlctlbar">
 								<h5 style="position: absolute; bottom: 26px;">TRL: <span class="label label-success hide" id="trlname"></span></h5>
-                                                                <input id="trlvolumeslider" type="range" min="0" max="100" value="100" step="1" style="right: 30px;">
+								<input id="trlvolumeslider" type="range" min="0" max="100" value="100" step="1" style="right: 30px;">
 								<i class="fa fa-users fa-2x" style="position: absolute; bottom: 26px; right: 80px;"></i>
-                                                                <button class="btn btn-warning btn-sm" id="trlmutebtn" style="position: absolute; bottom: 26px; right: 40px;"><span class="glyphicon glyphicon-volume-off"></span></button>
-                                                                </div>
-                                                        </div>
-                                                </div>
+								<button class="btn btn-warning btn-sm" id="trlmutebtn" style="position: absolute; bottom: 26px; right: 40px;"><span class="glyphicon glyphicon-volume-off"></span></button>
+							</div>
+						</div>
 					</div>
-					<div class="col-md-4">
-						<div class="panel panel-default">
-                                                        <div class="panel-heading">
-								<h3 class="panel-title"><span class="label label-primary hide" id="source"></span></h3>
-								<div class="btn-group btn-group-xs">
-								 <button autocomplete="off" id="makor" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Source:<span class="caret"></span></button>
-								    <ul id="makorlist" class="dropdown-menu" role="menu">
+				</div>
+				<div class="col-md-4">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title"><span class="label label-primary hide" id="source"></span></h3>
+							<div class="btn-group btn-group-xs">
+								<button autocomplete="off" id="makor" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Source:<span class="caret"></span></button>
+								<ul id="makorlist" class="dropdown-menu" role="menu">
 									<li><a href="#" id="15">Hebrew</a></li>
 									<li><a href="#" id="23">Russian</a></li>
 									<li><a href="#" id="24">English</a></li>
@@ -140,43 +140,30 @@
 									<li><a href="#" id="55">Ukrainian</a></li>
 									<li><a href="#" id="56">Niderland</a></li>
 									<li><a href="#" id="57">China</a></li>
-								    </ul>
-								</div>
-                                                        </div>
-                                                        <div class="panel-body" id="videolocal">
+								</ul>
+							</div>
+						</div>
+						<div class="panel-body" id="videolocal">
 							<button class="btn btn-warning btn-xs" id="togglevideo" value="Off" style="position: absolute; top: 0px; right: 10px; margin: 10px;">Video OFF</button>
-                                                        <video class="rounded centered" width="100%" height="100%" id="remoteVideo" autoplay></video>
-                                                        <audio id="remoteAudio" controls autoplay></audio>
-                                                        </div>
-                                                        <div class="panel-footer" id="srcfooter">
-                                                                <div id="srcctlbar">
+							<video class="rounded centered" width="100%" height="100%" id="remoteVideo" autoplay></video>
+							<audio id="remoteAudio" controls autoplay></audio>
+						</div>
+						<div class="panel-footer" id="srcfooter">
+							<div id="srcctlbar">
 								<button class="btn btn-info btn-sm" id="fullscreenbtn" style="position: absolute; bottom: 26px; align: left"><span class="glyphicon glyphicon-fullscreen"></span></button>
-                                                                <input id="srcvolumeslider" type="range" min="0" max="100" value="100" step="1" style="right: 30px;">
+								<input id="srcvolumeslider" type="range" min="0" max="100" value="100" step="1" style="right: 30px;">
 								<i class="fa fa-heart fa-2x" style="position: absolute; bottom: 26px; right: 80px;"></i>
-                                                                <button class="btn btn-warning btn-sm" id="srcmutebtn" style="position: absolute; bottom: 26px; right: 40px;"><span class="glyphicon glyphicon-volume-off"></span></button>
-                                                                </div>
-                                                        </div>
-                                                </div>
-						<!--div class="panel panel-default hide" id="trl2panel">
-                                                        <div class="panel-heading">
-                                                                <h3 class="panel-title">T2: <span class="label label-info hide" id="remote1"></span></h3>
-                                                        </div>
-                                                        <div class="panel-body relative" id="videoremote1">
-                                                        </div>
-                                                        <div class="panel-footer" id="trlfooter">
-                                                                <div id="trlctlbar">
-                                                                <input id="trlvolumeslider" type="range" min="0" max="100" value="100" step="1" style="right: 10px;">
-                                                                <button class="btn btn-warning btn-sm" id="trlmutebtn" style="position: absolute; bottom: 26px; right: 40px;"><span class="glyphicon glyphicon-volume-off"></span></button>
-                                                                </div>
-                                                        </div>
-                                                </div-->
+								<button class="btn btn-warning btn-sm" id="srcmutebtn" style="position: absolute; bottom: 26px; right: 40px;"><span class="glyphicon glyphicon-volume-off"></span></button>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
 
-	<hr>
+<hr>
 </div>
 </body>
 </html>

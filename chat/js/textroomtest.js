@@ -16,11 +16,11 @@ function attachChat() {
 			var body = { "request": "setup" };
 			Janus.debug("Sending message (" + JSON.stringify(body) + ")");
 			textroom.send({"message": body});
-                        $('#start').removeAttr('disabled').html("Disconnect")
-                                .click(function() {
-                                        $(this).attr('disabled', true);
-                                        janus.destroy();
-                                });
+			$('#start').removeAttr('disabled').html("Disconnect")
+				.click(function() {
+					$(this).attr('disabled', true);
+					janus.destroy();
+				});
 		},
 		error: function(error) {
 			console.error("  -- Error attaching plugin...", error);
@@ -86,21 +86,21 @@ function attachChat() {
 				if(whisper === true) {
 					// Private message
 					$('#datarecv').append('<p style="color: purple;"><b>[whisper from ' + participants[from].split("_")[0] + ']</b> ' + msg);
-					$('#datarecv').get(0).scrollTop = $('#datarecv').get(0).scrollHeight;				
+					$('#datarecv').get(0).scrollTop = $('#datarecv').get(0).scrollHeight;
 				} else {
 					// Public message
 					//$('#datarecv').append('<p><b>' + participants[from] + ':</b> ' + msg);
 					//$('#datarecv').get(0).scrollTop = $('#datarecv').get(0).scrollHeight;				
 					var user = participants[from].split("_")[0];
-                                        var role = participants[from].split("_")[1];
-                                        var text = msg;
-                                        if(role !== "shidur") {
-                                                var style = "style='color: #2fa4e7'";
-                                        } else {
-                                                var style = "style='color: red'";
-                                        }
-                                        datamsg = "<i>("+timest+") </i><span " +  style +  ">" + user + "</span>" + " : " + text + "<br>";
-                                        showMessage(user, text, datamsg);
+					var role = participants[from].split("_")[1];
+					var text = msg;
+					if(role !== "shidur") {
+						var style = "style='color: #2fa4e7'";
+					} else {
+						var style = "style='color: red'";
+					}
+					datamsg = "<i>("+timest+") </i><span " +  style +  ">" + user + "</span>" + " : " + text + "<br>";
+					showMessage(user, text, datamsg);
 				}
 			} else if(what === "join") {
 				// Somebody joined
@@ -112,10 +112,10 @@ function attachChat() {
 				if(username !== mychatid && $('#rp' + username).length === 0 && display !== "bb_shidur") {
 					// Add to the participants list
 					$('#list').append('<li id="rp' + username + '" class="list-group-item">' + displayname + '</li>');
-                                        datamsg = "<span style='color: green;'><i>" + displayname + "</span> joined</i><br>";
-                                        var user = "SYSTEM";
-                                        var text = displayname + " joined";
-                                        showMessage(user, text, datamsg);
+					datamsg = "<span style='color: green;'><i>" + displayname + "</span> joined</i><br>";
+					var user = "SYSTEM";
+					var text = displayname + " joined";
+					showMessage(user, text, datamsg);
 					$('#rp' + username).css('cursor', 'pointer').click(function() {
 						var username = $(this).attr('id').split("rp")[1];
 						sendPrivateMsg(username);
@@ -127,12 +127,12 @@ function attachChat() {
 				var display = participants[username];
 				var displayname = participants[username].split("_")[0]
 				if(display !== "bb_shidur") {
-                                        $('#rp' + username).remove();
-                                        datamsg = "<span style='color: green;'><i>" + displayname + "</span> leave</i><br>";
-                                        var user = "SYSTEM";
-                                        var text = displayname + " leave";
-                                        showMessage(user, text, datamsg);
-                                }
+					$('#rp' + username).remove();
+					datamsg = "<span style='color: green;'><i>" + displayname + "</span> leave</i><br>";
+					var user = "SYSTEM";
+					var text = displayname + " leave";
+					showMessage(user, text, datamsg);
+				}
 				delete participants[username];
 				checkUser();
 			} else if(what === "destroyed") {
@@ -161,42 +161,42 @@ function chatTime(t) {
 }
 
 function checkEnter(field, event) {
-        var theCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
-        if(theCode == 13) {
-                if(field.id == 'username')
-                        registerUsername();
-                else if(field.id == 'datasend')
-                        sendData();
-                return false;
-        } else {
-                return true;
-        }
+	var theCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
+	if(theCode == 13) {
+		if(field.id == 'username')
+			registerUsername();
+		else if(field.id == 'datasend')
+			sendData();
+		return false;
+	} else {
+		return true;
+	}
 }
 
 function registerUsername() {
 	if($('#username').length === 0) {
-                $('#register').click(registerUsername);
-                $('#username').focus();
-        } else {
-                $('#username').attr('disabled', true);
-                $('#register').attr('disabled', true).unbind('click');
-                var username = $('#username').val();
-                if(username === "") {
-                        $('#you')
-                                .removeClass().addClass('label label-warning')
-                                .html("Insert your display name (e.g., pippo)");
-                        $('#username').removeAttr('disabled');
-                        $('#register').removeAttr('disabled').click(registerUsername);
-                        return;
-                }
-                if(/[^a-zA-Z0-9]/.test(username)) {
-                        $('#you')
-                                .removeClass().addClass('label label-warning')
-                                .html('Input is not alphanumeric');
-                        $('#username').removeAttr('disabled').val("");
-                        $('#register').removeAttr('disabled').click(registerUsername);
-                        return;
-                }
+		$('#register').click(registerUsername);
+		$('#username').focus();
+	} else {
+		$('#username').attr('disabled', true);
+		$('#register').attr('disabled', true).unbind('click');
+		var username = $('#username').val();
+		if(username === "") {
+			$('#you')
+				.removeClass().addClass('label label-warning')
+				.html("Insert your display name (e.g., pippo)");
+			$('#username').removeAttr('disabled');
+			$('#register').removeAttr('disabled').click(registerUsername);
+			return;
+		}
+		if(/[^a-zA-Z0-9]/.test(username)) {
+			$('#you')
+				.removeClass().addClass('label label-warning')
+				.html('Input is not alphanumeric');
+			$('#username').removeAttr('disabled').val("");
+			$('#register').removeAttr('disabled').click(registerUsername);
+			return;
+		}
 		var myusername = username + "_bb";
 		var mydisplayname = myusername.split("_")[0];
 		var userstatus = myusername.split("_")[1];
@@ -255,45 +255,45 @@ function registerUsername() {
 }
 
 function supportReq() {
-        for(var i in participants) {
-                var display = participants[i];
-                var username = i;
-                if(display === "bb_shidur") {
-                        var message = {
-                                textroom: "message",
-                                transaction: randomString(12),
-                                room: room,
-                                to: username,
-                                text: "need support!"
-                        };
-                        textroom.data({
-                                text: JSON.stringify(message),
-                                error: function(reason) { bootbox.alert(reason); },
-                                success: function() {
-                                        var datamsg = "<span style='color: red;'><i>Support request is sent, please wait..</i></span><br>";
-                                        var logDiv = document.getElementById("datarecv");
-                                        $('#datarecv').last().append(datamsg);
-                                        logDiv.scrollTop = logDiv.scrollHeight;
-                                }
-                        });
-                }
-        }
+	for(var i in participants) {
+		var display = participants[i];
+		var username = i;
+		if(display === "bb_shidur") {
+			var message = {
+				textroom: "message",
+				transaction: randomString(12),
+				room: room,
+				to: username,
+				text: "need support!"
+			};
+			textroom.data({
+				text: JSON.stringify(message),
+				error: function(reason) { bootbox.alert(reason); },
+				success: function() {
+					var datamsg = "<span style='color: red;'><i>Support request is sent, please wait..</i></span><br>";
+					var logDiv = document.getElementById("datarecv");
+					$('#datarecv').last().append(datamsg);
+					logDiv.scrollTop = logDiv.scrollHeight;
+				}
+			});
+		}
+	}
 }
 
 function checkUser() {
-        var moderators = [];
-        for(var i in participants) {
-                var display = participants[i];
-                var username = i;
-                if(display === "bb_shidur") {
-                        var moderators = username;
-                }
-        }
-        if(moderators.length > 0) {
-                $('#support').removeClass('disabled').addClass('btn-success').html("<i class='fa fa-headphones fa-lg'></i> Support Online").show();
-        } else {
-                $('#support').removeClass('btn-success').addClass('btn-primary disabled').html("<i class='fa fa-headphones fa-lg'></i> Support Offline").show();
-        }
+	var moderators = [];
+	for(var i in participants) {
+		var display = participants[i];
+		var username = i;
+		if(display === "bb_shidur") {
+			var moderators = username;
+		}
+	}
+	if(moderators.length > 0) {
+		$('#support').removeClass('disabled').addClass('btn-success').html("<i class='fa fa-headphones fa-lg'></i> Support Online").show();
+	} else {
+		$('#support').removeClass('btn-success').addClass('btn-primary disabled').html("<i class='fa fa-headphones fa-lg'></i> Support Offline").show();
+	}
 }
 
 
@@ -315,7 +315,7 @@ function sendPrivateMsg(username) {
 				error: function(reason) { bootbox.alert(reason); },
 				success: function() {
 					$('#datarecv').append('<p style="color: purple;"><b>[whisper to ' + display + ']</b> ' + result);
-					$('#datarecv').get(0).scrollTop = $('#datarecv').get(0).scrollHeight;				
+					$('#datarecv').get(0).scrollTop = $('#datarecv').get(0).scrollHeight;
 				}
 			});
 		}
@@ -367,31 +367,31 @@ function showMessage(user, text, datamsg) {
 }
 
 function notifyMe(title, message) {
-        if (!Notification) {
-                alert('Desktop notifications not available in your browser. Try Chromium.');
-                return;
-        }
-        if (Notification.permission !== "granted")
-                Notification.requestPermission();
-        else {
-                var notification = new Notification(title+":", {
-                        icon: 'nlogo.png',
-                        body: message,
-                });
+	if (!Notification) {
+		alert('Desktop notifications not available in your browser. Try Chromium.');
+		return;
+	}
+	if (Notification.permission !== "granted")
+		Notification.requestPermission();
+	else {
+		var notification = new Notification(title+":", {
+			icon: 'nlogo.png',
+			body: message,
+		});
 		notification.onclick = function () {
 			window.focus();
 		}
-        }
+	}
 }
 
 function getHiddenProp(){
-    var prefixes = ['webkit','moz','ms','o'];
-    if ('hidden' in document) return 'hidden';
-    for (var i = 0; i < prefixes.length; i++){
-        if ((prefixes[i] + 'Hidden') in document)
-            return prefixes[i] + 'Hidden';
-    }
-    return null;
+	var prefixes = ['webkit','moz','ms','o'];
+	if ('hidden' in document) return 'hidden';
+	for (var i = 0; i < prefixes.length; i++){
+		if ((prefixes[i] + 'Hidden') in document)
+			return prefixes[i] + 'Hidden';
+	}
+	return null;
 }
 
 function sendData() {
@@ -415,11 +415,11 @@ function sendData() {
 
 // Just an helper to generate random usernames
 function randomString(len, charSet) {
-    charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var randomString = '';
-    for (var i = 0; i < len; i++) {
-    	var randomPoz = Math.floor(Math.random() * charSet.length);
-    	randomString += charSet.substring(randomPoz,randomPoz+1);
-    }
-    return randomString;
+	charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	var randomString = '';
+	for (var i = 0; i < len; i++) {
+		var randomPoz = Math.floor(Math.random() * charSet.length);
+		randomString += charSet.substring(randomPoz,randomPoz+1);
+	}
+	return randomString;
 }

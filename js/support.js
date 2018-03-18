@@ -85,16 +85,16 @@ function supportHandle() {
 						if(remoteFeed != null) {
 							console.log("Feed " + remoteFeed.rfid + " (" + remoteFeed.rfdisplay + ") has left the room, detaching");
 							var display = remoteFeed.rfdisplay;
-                                                                                var dstatus = display.split("_");
+							var dstatus = display.split("_");
 							console.log("-- ::STATUS: " + dstatus[1]);
 							if(dstatus[1] === "bb") {
-							 console.log("-- ::Leaving BB translator");
-							 } else if(dstatus[1] === "shidur") {
-							 	console.log("-- ::Leaving Shidur modrator");
-							 } else {
-							 	console.log("-- ::Leaving 2nd tranlator");
-							 $('#trlname').empty().hide();
-							 }
+								console.log("-- ::Leaving BB translator");
+							} else if(dstatus[1] === "shidur") {
+								console.log("-- ::Leaving Shidur modrator");
+							} else {
+								console.log("-- ::Leaving 2nd tranlator");
+								$('#trlname').empty().hide();
+							}
 							//$('#remote'+remoteFeed.rfindex).empty().hide();
 							//$('#trl2panel').empty().hide();
 							$('#trl2panel').addClass('hide').show();
@@ -122,14 +122,14 @@ function supportHandle() {
 							var dstatus = display.split("_");
 							console.log("-- ::STATUS: " + dstatus[1]);
 							if(dstatus[1] === "bb") {
-							 console.log("-- ::Leaving BB translator");
-							 $('#mixname').empty().hide();
-							 } else if(dstatus[1] === "shidur") {
-							 console.log("-- ::Leaving Shidur modrator");
-							 } else {
-							 console.log("-- ::Leaving 2nd tranlator");
-							 $('#trlname').empty().hide();
-                                                                                 }
+								console.log("-- ::Leaving BB translator");
+								$('#mixname').empty().hide();
+							} else if(dstatus[1] === "shidur") {
+								console.log("-- ::Leaving Shidur modrator");
+							} else {
+								console.log("-- ::Leaving 2nd tranlator");
+								$('#trlname').empty().hide();
+							}
 							//$('#remote'+remoteFeed.rfindex).empty().hide();
 							//$('#trl2panel').empty().hide();
 							$('#trl2panel').addClass('hide').show();
@@ -155,8 +155,8 @@ function supportHandle() {
 			// The publisher stream is sendonly, we don't expect anything here
 		},
 		ondataopen: function(data) {
-                Janus.log("The DataChannel is available!");
-                //$('#datasend').removeAttr('disabled');
+			Janus.log("The DataChannel is available!");
+			//$('#datasend').removeAttr('disabled');
 		},
 		ondata: function(rmusername, data) {
 			Janus.debug("We got LOCAL data from: " + rmusername + data);
@@ -170,8 +170,8 @@ function supportHandle() {
 
 function getSupListener(id, display) {
 	var dparse = display.split("_");
-        var displayname = dparse[0];
-        var userstatus = dparse[1];
+	var displayname = dparse[0];
+	var userstatus = dparse[1];
 	// Chek who enter to room
 	if(userstatus === "bb") {
 		console.log("-- ::BB translator in the room");
@@ -198,7 +198,7 @@ function publishSupOwnFeed(useAudio) {
 			console.log("WebRTC error:");
 			console.log(error);
 			if (useAudio) {
-				 publishSupOwnFeed(false);
+				publishSupOwnFeed(false);
 			} else {
 				bootbox.alert("WebRTC error... " + JSON.stringify(error));
 				$('#publish').removeAttr('disabled').click(function() { publishSupOwnFeed(true); });
@@ -215,121 +215,121 @@ function unpublishSupOwnFeed() {
 }
 
 function sendSupData() {
-    var data = $('#datasend').val();
+	var data = $('#datasend').val();
 	logDiv = document.getElementById("datarecv");
 	$('#datarecv').last().append("<span style='color: #2fa4e7'>" + mydisplayname + "</span>" + " : " + data + "<br>");
 	logDiv.scrollTop = logDiv.scrollHeight;
-        if(data === "") {
+	if(data === "") {
 		bootbox.alert('Insert a message to send on the DataChannel');
 		return;
-        }
+	}
 	datamsg = "<span style='color: #2fa4e7'>" + mydisplayname + "</span>" + " : " + data + "<br>";
-        mcusup.data({
+	mcusup.data({
 		text: datamsg,
 		error: function(reason) { bootbox.alert(reason); },
 		success: function() { $('#datasend').val(''); },
-        });
+	});
 }
 
 function newSupRemoteFeed(id, display) {
 	var remoteFeed = null;
 	janus.attach({
-	    plugin: "janus.plugin.videoroom",
-	    success: function(pluginHandle) {
-	            remoteFeed = pluginHandle;
-	            console.log("Plugin attached! (" + remoteFeed.getPlugin() + ", id=" + remoteFeed.getId() + ")");
-	            console.log("  -- This is a subscriber");
-	            // We wait for the plugin to send us an offer
-	            var listen = { "request": "join", "room": 1000, "ptype": "listener", "feed": id };
-	            remoteFeed.send({"message": listen});
-	    },
-	    error: function(error) {
-	            console.log("  -- Error attaching plugin... " + error);
-	            bootbox.alert("Error attaching plugin... " + error);
-	    },
-	    onmessage: function(msg, jsep) {
-	            console.log(" ::: Got a message (listener) :::");
-	            console.log(JSON.stringify(msg));
-	            var event = msg["videoroom"];
-	            console.log("Event: " + event);
-	            if(event != undefined && event != null) {
-	                    if(event === "attached") {
-	                            // Subscriber created and attached
-	                            for(var i=1;i<6;i++) {
-	                                    if(supfeeds[i] === undefined || supfeeds[i] === null) {
-	                                            supfeeds[i] = remoteFeed;
-	                                            remoteFeed.rfindex = i;
-	                                            break;
-	                                    }
-	                            }
-	                            remoteFeed.rfid = msg["id"];
-	                            remoteFeed.rfdisplay = msg["display"];
-	                            console.log("Successfully attached to feed " + remoteFeed.rfid + " (" + remoteFeed.rfdisplay + ") in room " + msg["room"]);
-	                            rmusername = remoteFeed.rfdisplay;
-	                            $('#remote'+remoteFeed.rfindex).removeClass('hide').html(remoteFeed.rfdisplay).show();
-	                            $('#trl2panel').removeClass('hide').show();
-	                    } else if(msg["error"] !== undefined && msg["error"] !== null) {
-	                            bootbox.alert(msg["error"]);
-	                    } else {
-	                            // What has just happened?
-	                    }
-	            }
-	            if(jsep !== undefined && jsep !== null) {
-			console.log("Handling SDP as well...");
-			console.log(jsep);
-			// Answer and attach
-			remoteFeed.createAnswer({
-			    jsep: jsep,
-			    media: { audioSend: false, video: false , data: true},  // We want recvonly audio/video
-			    success: function(jsep) {
-				console.log("Got SDP!");
-				var body = { "request": "start", "room": room };
-				remoteFeed.send({"message": body, "jsep": jsep});
-			    },
-			    error: function(error) {
-				console.log("WebRTC error:");
-				console.log(error);
-				bootbox.alert("WebRTC error... " + JSON.stringify(error));
-			    }
-			});
-	            }
-	    },
-	    webrtcState: function(on) {
+		plugin: "janus.plugin.videoroom",
+		success: function(pluginHandle) {
+			remoteFeed = pluginHandle;
+			console.log("Plugin attached! (" + remoteFeed.getPlugin() + ", id=" + remoteFeed.getId() + ")");
+			console.log("  -- This is a subscriber");
+			// We wait for the plugin to send us an offer
+			var listen = { "request": "join", "room": 1000, "ptype": "listener", "feed": id };
+			remoteFeed.send({"message": listen});
+		},
+		error: function(error) {
+			console.log("  -- Error attaching plugin... " + error);
+			bootbox.alert("Error attaching plugin... " + error);
+		},
+		onmessage: function(msg, jsep) {
+			console.log(" ::: Got a message (listener) :::");
+			console.log(JSON.stringify(msg));
+			var event = msg["videoroom"];
+			console.log("Event: " + event);
+			if(event != undefined && event != null) {
+				if(event === "attached") {
+					// Subscriber created and attached
+					for(var i=1;i<6;i++) {
+						if(supfeeds[i] === undefined || supfeeds[i] === null) {
+							supfeeds[i] = remoteFeed;
+							remoteFeed.rfindex = i;
+							break;
+						}
+					}
+					remoteFeed.rfid = msg["id"];
+					remoteFeed.rfdisplay = msg["display"];
+					console.log("Successfully attached to feed " + remoteFeed.rfid + " (" + remoteFeed.rfdisplay + ") in room " + msg["room"]);
+					rmusername = remoteFeed.rfdisplay;
+					$('#remote'+remoteFeed.rfindex).removeClass('hide').html(remoteFeed.rfdisplay).show();
+					$('#trl2panel').removeClass('hide').show();
+				} else if(msg["error"] !== undefined && msg["error"] !== null) {
+					bootbox.alert(msg["error"]);
+				} else {
+					// What has just happened?
+				}
+			}
+			if(jsep !== undefined && jsep !== null) {
+				console.log("Handling SDP as well...");
+				console.log(jsep);
+				// Answer and attach
+				remoteFeed.createAnswer({
+					jsep: jsep,
+					media: { audioSend: false, video: false , data: true},  // We want recvonly audio/video
+					success: function(jsep) {
+						console.log("Got SDP!");
+						var body = { "request": "start", "room": room };
+						remoteFeed.send({"message": body, "jsep": jsep});
+					},
+					error: function(error) {
+						console.log("WebRTC error:");
+						console.log(error);
+						bootbox.alert("WebRTC error... " + JSON.stringify(error));
+					}
+				});
+			}
+		},
+		webrtcState: function(on) {
 			Janus.log("-- ::Janus says this WebRTC PeerConnection (feed #" + remoteFeed.rfindex + ") is " + (on ? "up" : "down") + " now");
-	    },
-	    onlocalstream: function(stream) {
-	            // The subscriber stream is recvonly, we don't expect anything here
-	    },
-	    onremotestream: function(stream) {
-	            console.log("Remote feed #" + remoteFeed.rfindex);
-	            //attachMediaStream($('#remotevideo'+remoteFeed.rfindex).get(0), stream);
-	            // Forward rtp remote feed
-	            //console.log("  -- Start Remote RTP forward: " + remoteFeed.rfid);
-	            //$('#forward'+remoteFeed.rfindex).click(function () {
-	            //        var rmid = remoteFeed.rfid;
-	            //        var rmusername = remoteFeed.rfdisplay;
-	            //        forwardRemoteFeed(rmid, rmusername);
-	            //});
-	    },
-	    ondataopen: function(data) {
-	            Janus.log("The DataChannel is available!");
-				datalive = 1;
-	            $('#videos').removeClass('hide').show();
-	            $('#datasend').removeAttr('disabled');
-	    },
+		},
+		onlocalstream: function(stream) {
+			// The subscriber stream is recvonly, we don't expect anything here
+		},
+		onremotestream: function(stream) {
+			console.log("Remote feed #" + remoteFeed.rfindex);
+			//attachMediaStream($('#remotevideo'+remoteFeed.rfindex).get(0), stream);
+			// Forward rtp remote feed
+			//console.log("  -- Start Remote RTP forward: " + remoteFeed.rfid);
+			//$('#forward'+remoteFeed.rfindex).click(function () {
+			//        var rmid = remoteFeed.rfid;
+			//        var rmusername = remoteFeed.rfdisplay;
+			//        forwardRemoteFeed(rmid, rmusername);
+			//});
+		},
+		ondataopen: function(data) {
+			Janus.log("The DataChannel is available!");
+			datalive = 1;
+			$('#videos').removeClass('hide').show();
+			$('#datasend').removeAttr('disabled');
+		},
 		ondata: function(data) {
 			var dataparse = data.split(":");
-	        Janus.debug("We got data from: " + data);
+			Janus.debug("We got data from: " + data);
 			Janus.debug(" -- Split data: " + dataparse[0]);
 			if(dataparse[0] === "micst") {
 				Janus.debug(" -- Going to select userid: " + dataparse[1]);
-				if(dataparse[2] === "Off") { 
+				if(dataparse[2] === "Off") {
 					Janus.debug(" -- User ID: " + dataparse[1] + " mic is closed!");
-					$('#'+dataparse[1]).removeClass('active'); 
+					$('#'+dataparse[1]).removeClass('active');
 				}
-				if(dataparse[2] === "On") { 
+				if(dataparse[2] === "On") {
 					Janus.debug(" -- User ID: " + dataparse[1] + " mic is open!");
-					$('#'+dataparse[1]).addClass('active'); 
+					$('#'+dataparse[1]).addClass('active');
 				}
 			} else {
 				logDiv = document.getElementById("datarecv");
@@ -337,7 +337,7 @@ function newSupRemoteFeed(id, display) {
 				logDiv.scrollTop = logDiv.scrollHeight;
 				var visProp = getHiddenProp();
 				if (document[visProp]) {
-				//notifyMe('NEW MESSAGE!');
+					//notifyMe('NEW MESSAGE!');
 					var html = data;
 					var div = document.createElement("div");
 					div.innerHTML = html;
@@ -348,10 +348,10 @@ function newSupRemoteFeed(id, display) {
 					notifyMe(user, text);
 				}
 			}
-        },
-        oncleanup: function() {
-            console.log(" ::: Got a cleanup notification (remote feed " + id + ") :::");
-	    }
+		},
+		oncleanup: function() {
+			console.log(" ::: Got a cleanup notification (remote feed " + id + ") :::");
+		}
 	});
 }
 

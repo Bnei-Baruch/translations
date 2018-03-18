@@ -80,21 +80,21 @@ var srcvideo;
 
 
 if(localStorage.makor) {
-        console.log("  -- Storage Makor: " + localStorage.makor);
-        console.log("  -- Storage Makor Text: " + localStorage.makortext);
-        var makor = Number(localStorage.makor);
+	console.log("  -- Storage Makor: " + localStorage.makor);
+	console.log("  -- Storage Makor Text: " + localStorage.makortext);
+	var makor = Number(localStorage.makor);
 } else {
-        var makor = null;
+	var makor = null;
 }
 
 if(localStorage.translate) {
-        console.log("  -- Storage Translate: " + localStorage.translate);
-        console.log("  -- Storage Video Text: " + localStorage.translatetext);
-        var translate = Number(localStorage.translate);
+	console.log("  -- Storage Translate: " + localStorage.translate);
+	console.log("  -- Storage Video Text: " + localStorage.translatetext);
+	var translate = Number(localStorage.translate);
 	localport = Number("5"+translate+"0");
 	room = Number("1"+translate+"0");
 } else {
-        var translate = null;
+	var translate = null;
 }
 
 $(document).on('click', '#makorlist li a', function () {
@@ -108,7 +108,7 @@ $(document).on('click', '#makorlist li a', function () {
 		$('#start').removeClass('disabled');
 	}
 	if(myusername != undefined && myusername != null) {
-	//attachStreamingHandle(makor, '#remoteAudio');
+		//attachStreamingHandle(makor, '#remoteAudio');
 	}
 });
 
@@ -129,220 +129,220 @@ $(document).on('click', '#translatelist li a', function () {
 
 $(document).ready(function() {
 
-if(translate != undefined && translate != null) {
-	$('#translate').removeClass('hide').html("Translation room: " + localStorage.translatetext).show();
-}
+	if(translate != undefined && translate != null) {
+		$('#translate').removeClass('hide').html("Translation room: " + localStorage.translatetext).show();
+	}
 
-if(translate != undefined && translate != null) {
-	$('#start').removeClass('disabled');
-}
+	if(translate != undefined && translate != null) {
+		$('#start').removeClass('disabled');
+	}
 	// Initialize the library (console debug enabled)
 	Janus.init({debug: true, callback: function() {
-		// Use a button to start the demo
-		$('#start').click(function() {
-			if(started)
-				return;
-			started = true;
-			$(this).attr('disabled', true).unbind('click');
-			// Make sure the browser supports WebRTC
-			if(!Janus.isWebrtcSupported()) {
-				bootbox.alert("No WebRTC support... ");
-				return;
-			}
-			// Create session
-			janus = new Janus(
-				{
-					server: server,
-					success: function() {
-						
-						// Attach to video MCU test plugin
-						janus.attach(
-							{
-								plugin: "janus.plugin.videoroom",
-								success: function(pluginHandle) {
-									$('#details').remove();
-									mcutest = pluginHandle;
-									console.log("Plugin attached! (" + mcutest.getPlugin() + ", id=" + mcutest.getId() + ")");
-									console.log("  -- This is a publisher/manager");
-									// Prepare the username registration
-									$('#videojoin').removeClass('hide').show();
-									$('#registernow').removeClass('hide').show();
-									$('#register').click(registerUsername);
-									$('#username').focus();
-									$('#start').removeAttr('disabled').html("Disconnect")
-										.click(function() {
-											$(this).attr('disabled', true);
-											janus.destroy();
-										});
+			// Use a button to start the demo
+			$('#start').click(function() {
+				if(started)
+					return;
+				started = true;
+				$(this).attr('disabled', true).unbind('click');
+				// Make sure the browser supports WebRTC
+				if(!Janus.isWebrtcSupported()) {
+					bootbox.alert("No WebRTC support... ");
+					return;
+				}
+				// Create session
+				janus = new Janus(
+					{
+						server: server,
+						success: function() {
 
-								},
-								error: function(error) {
-									console.log("  -- Error attaching plugin... " + error);
-									bootbox.alert("Error attaching plugin... " + error);
-								},
-								consentDialog: function(on) {
-									console.log("Consent dialog should be " + (on ? "on" : "off") + " now");
-									if(on) {
-										// Darken screen and show hint
-										$.blockUI({ 
-											message: '<div><img src="up_arrow.png"/></div>',
-											css: {
-												border: 'none',
-												padding: '15px',
-												backgroundColor: 'transparent',
-												color: '#aaa',
-												top: '10px',
-												left: (navigator.mozGetUserMedia ? '-100px' : '300px')
-											} });
-									} else {
-										// Restore screen
-										$.unblockUI();
-									}
-								},
-								onmessage: function(msg, jsep) {
-									console.log(" ::: Got a message (publisher) :::");
-									console.log(JSON.stringify(msg));
-									var event = msg["videoroom"];
-									console.log("Event: " + event);
-									if(event != undefined && event != null) {
-										if(event === "joined") {
-											// Publisher/manager created, negotiate WebRTC and attach to existing feeds, if any
-											myid = msg["id"];
-											console.log("Successfully joined room " + msg["room"] + " with ID " + myid + " with Name:  " + myusername);
-											publishOwnFeed(true);
-											// Any new feed to attach to?
-											if(msg["publishers"] !== undefined && msg["publishers"] !== null) {
-												var list = msg["publishers"];
-												console.log("Got a list of available publishers/feeds:");
-												console.log(list);
-												for(var f in list) {
-													var id = list[f]["id"];
-                                                                                                        var displayname = list[f]["display"];
-                                                                                                        getListener(id, displayname);
-                                                                                                        newRemoteFeed(id, displayname)
-												}
-											}
-										} else if(event === "destroyed") {
-											// The room has been destroyed
-											console.log("The room has been destroyed!");
-											bootbox.alert(error, function() {
-												window.location.reload();
+							// Attach to video MCU test plugin
+							janus.attach(
+								{
+									plugin: "janus.plugin.videoroom",
+									success: function(pluginHandle) {
+										$('#details').remove();
+										mcutest = pluginHandle;
+										console.log("Plugin attached! (" + mcutest.getPlugin() + ", id=" + mcutest.getId() + ")");
+										console.log("  -- This is a publisher/manager");
+										// Prepare the username registration
+										$('#videojoin').removeClass('hide').show();
+										$('#registernow').removeClass('hide').show();
+										$('#register').click(registerUsername);
+										$('#username').focus();
+										$('#start').removeAttr('disabled').html("Disconnect")
+											.click(function() {
+												$(this).attr('disabled', true);
+												janus.destroy();
 											});
-										} else if(event === "event") {
-											// Any new feed to attach to?
-											if(msg["publishers"] !== undefined && msg["publishers"] !== null) {
-												var list = msg["publishers"];
-												console.log("Got a list of available publishers/feeds:");
-												console.log("--== Someone enter :| ==--");
-												console.log(list);
-												for(var f in list) {
-													var id = list[f]["id"];
-                                                                                                        var displayname = list[f]["display"];
-                                                                                                        getListener(id, displayname);
-                                                                                                        newRemoteFeed(id, displayname)
-												}
-											} else if(msg["leaving"] !== undefined && msg["leaving"] !== null) {
-												// One of the publishers has gone away?
-												var leaving = msg["leaving"];
-												console.log("Publisher left: " + leaving);
-												$('#'+leaving).hide();
-												$('#a'+leaving).remove();
-												var remoteFeed = null;
-												for(var i=1; i<6; i++) {
-													if(feeds[i] != null && feeds[i] != undefined && feeds[i].rfid == leaving) {
-														remoteFeed = feeds[i];
-														break;
+
+									},
+									error: function(error) {
+										console.log("  -- Error attaching plugin... " + error);
+										bootbox.alert("Error attaching plugin... " + error);
+									},
+									consentDialog: function(on) {
+										console.log("Consent dialog should be " + (on ? "on" : "off") + " now");
+										if(on) {
+											// Darken screen and show hint
+											$.blockUI({
+												message: '<div><img src="up_arrow.png"/></div>',
+												css: {
+													border: 'none',
+													padding: '15px',
+													backgroundColor: 'transparent',
+													color: '#aaa',
+													top: '10px',
+													left: (navigator.mozGetUserMedia ? '-100px' : '300px')
+												} });
+										} else {
+											// Restore screen
+											$.unblockUI();
+										}
+									},
+									onmessage: function(msg, jsep) {
+										console.log(" ::: Got a message (publisher) :::");
+										console.log(JSON.stringify(msg));
+										var event = msg["videoroom"];
+										console.log("Event: " + event);
+										if(event != undefined && event != null) {
+											if(event === "joined") {
+												// Publisher/manager created, negotiate WebRTC and attach to existing feeds, if any
+												myid = msg["id"];
+												console.log("Successfully joined room " + msg["room"] + " with ID " + myid + " with Name:  " + myusername);
+												publishOwnFeed(true);
+												// Any new feed to attach to?
+												if(msg["publishers"] !== undefined && msg["publishers"] !== null) {
+													var list = msg["publishers"];
+													console.log("Got a list of available publishers/feeds:");
+													console.log(list);
+													for(var f in list) {
+														var id = list[f]["id"];
+														var displayname = list[f]["display"];
+														getListener(id, displayname);
+														newRemoteFeed(id, displayname)
 													}
 												}
-												if(remoteFeed != null) {
-													console.log("Feed " + remoteFeed.rfid + " (" + remoteFeed.rfdisplay + ") has left the room, detaching");
-													feeds[remoteFeed.rfindex] = null;
-													remoteFeed.detach();
-												}
-											} else if(msg["unpublished"] !== undefined && msg["unpublished"] !== null) {
-												// One of the publishers has unpublished?
-												var unpublished = msg["unpublished"];
-												console.log("Publisher left: " + unpublished);
-												$('#'+unpublished).hide();
-												$('#a'+unpublished).remove();
-												var remoteFeed = null;
-												for(var i=1; i<6; i++) {
-													if(feeds[i] != null && feeds[i] != undefined && feeds[i].rfid == unpublished) {
-														remoteFeed = feeds[i];
-														break;
+											} else if(event === "destroyed") {
+												// The room has been destroyed
+												console.log("The room has been destroyed!");
+												bootbox.alert(error, function() {
+													window.location.reload();
+												});
+											} else if(event === "event") {
+												// Any new feed to attach to?
+												if(msg["publishers"] !== undefined && msg["publishers"] !== null) {
+													var list = msg["publishers"];
+													console.log("Got a list of available publishers/feeds:");
+													console.log("--== Someone enter :| ==--");
+													console.log(list);
+													for(var f in list) {
+														var id = list[f]["id"];
+														var displayname = list[f]["display"];
+														getListener(id, displayname);
+														newRemoteFeed(id, displayname)
 													}
+												} else if(msg["leaving"] !== undefined && msg["leaving"] !== null) {
+													// One of the publishers has gone away?
+													var leaving = msg["leaving"];
+													console.log("Publisher left: " + leaving);
+													$('#'+leaving).hide();
+													$('#a'+leaving).remove();
+													var remoteFeed = null;
+													for(var i=1; i<6; i++) {
+														if(feeds[i] != null && feeds[i] != undefined && feeds[i].rfid == leaving) {
+															remoteFeed = feeds[i];
+															break;
+														}
+													}
+													if(remoteFeed != null) {
+														console.log("Feed " + remoteFeed.rfid + " (" + remoteFeed.rfdisplay + ") has left the room, detaching");
+														feeds[remoteFeed.rfindex] = null;
+														remoteFeed.detach();
+													}
+												} else if(msg["unpublished"] !== undefined && msg["unpublished"] !== null) {
+													// One of the publishers has unpublished?
+													var unpublished = msg["unpublished"];
+													console.log("Publisher left: " + unpublished);
+													$('#'+unpublished).hide();
+													$('#a'+unpublished).remove();
+													var remoteFeed = null;
+													for(var i=1; i<6; i++) {
+														if(feeds[i] != null && feeds[i] != undefined && feeds[i].rfid == unpublished) {
+															remoteFeed = feeds[i];
+															break;
+														}
+													}
+													if(remoteFeed != null) {
+														console.log("Feed " + remoteFeed.rfid + " (" + remoteFeed.rfdisplay + ") has left the room, detaching");
+														feeds[remoteFeed.rfindex] = null;
+														remoteFeed.detach();
+													}
+												} else if(msg["error"] !== undefined && msg["error"] !== null) {
+													bootbox.alert(msg["error"]);
 												}
-												if(remoteFeed != null) {
-													console.log("Feed " + remoteFeed.rfid + " (" + remoteFeed.rfdisplay + ") has left the room, detaching");
-													feeds[remoteFeed.rfindex] = null;
-													remoteFeed.detach();
-												}
-											} else if(msg["error"] !== undefined && msg["error"] !== null) {
-												bootbox.alert(msg["error"]);
 											}
 										}
+										if(jsep !== undefined && jsep !== null) {
+											console.log("Handling SDP as well...");
+											console.log(jsep);
+											mcutest.handleRemoteJsep({jsep: jsep});
+										}
+									},
+									onlocalstream: function(stream) {
+										console.log(" ::: Got a local stream :::");
+										mystream = stream;
+										console.log(JSON.stringify(stream));
+										$('#videojoin').hide();
+										$('#videos').removeClass('hide').show();
+									},
+									onremotestream: function(stream) {
+										// The publisher stream is sendonly, we don't expect anything here
+									},
+									ondataopen: function(data) {
+										Janus.log("The DataChannel is available!");
+										$('#videos').removeClass('hide').show();
+										$('#datasend').removeAttr('disabled');
+										$('#registernow').addClass('hide').show();
+									},
+									ondata: function(rmusername, data) {
+										Janus.debug("We got LOCAL data from: " + rmusername + data);
+										$('#datarecv').val(data);
+									},
+									oncleanup: function() {
+										console.log(" ::: Got a cleanup notification: we are unpublished now :::");
+										mystream = null;
+										muted = false;
+										//$('#datasend').attr('disabled', true);
 									}
-									if(jsep !== undefined && jsep !== null) {
-										console.log("Handling SDP as well...");
-										console.log(jsep);
-										mcutest.handleRemoteJsep({jsep: jsep});
-									}
-								},
-								onlocalstream: function(stream) {
-									console.log(" ::: Got a local stream :::");
-									mystream = stream;
-									console.log(JSON.stringify(stream));
-									$('#videojoin').hide();
-									$('#videos').removeClass('hide').show();
-								},
-								onremotestream: function(stream) {
-									// The publisher stream is sendonly, we don't expect anything here
-								},
-								ondataopen: function(data) {
-                                                                        Janus.log("The DataChannel is available!");
-                                                                        $('#videos').removeClass('hide').show();
-                                                                        $('#datasend').removeAttr('disabled');
-									$('#registernow').addClass('hide').show();
-                                                                },
-                                                                ondata: function(rmusername, data) {
-                                                                        Janus.debug("We got LOCAL data from: " + rmusername + data);
-                                                                        $('#datarecv').val(data);
-                                                                },
-								oncleanup: function() {
-									console.log(" ::: Got a cleanup notification: we are unpublished now :::");
-									mystream = null;
-									muted = false;
-									//$('#datasend').attr('disabled', true);
-								}
+								});
+						},
+						error: function(error) {
+							console.log(error);
+							bootbox.alert(error, function() {
+								window.location.reload();
 							});
-					},
-					error: function(error) {
-						console.log(error);
-						bootbox.alert(error, function() {
+						},
+						destroyed: function() {
 							window.location.reload();
-						});
-					},
-					destroyed: function() {
-						window.location.reload();
-					}
-				});
-		});
-	}});
+						}
+					});
+			});
+		}});
 });
 
 function getListener(id, display) {
-        var dparse = display.split("_");
-        var displayname = dparse[0];
-        var userstatus = dparse[1];
-        if(userstatus === "bb") {
-                console.log("-- ::Enter BB translator");
-                $('#sessions-list').append('<a id="'+id+'" class="list-group-item list-group-item-info">'+displayname+'</a>');
-        } else if(userstatus === "shidur") {
-                console.log("-- ::Shidur modrator enter");
-        } else {
-                console.log("-- ::2nd tranlator enter");
-                $('#sessions-list').append('<a id="'+id+'" class="list-group-item list-group-item-info">'+displayname+'</a>');
-        }
+	var dparse = display.split("_");
+	var displayname = dparse[0];
+	var userstatus = dparse[1];
+	if(userstatus === "bb") {
+		console.log("-- ::Enter BB translator");
+		$('#sessions-list').append('<a id="'+id+'" class="list-group-item list-group-item-info">'+displayname+'</a>');
+	} else if(userstatus === "shidur") {
+		console.log("-- ::Shidur modrator enter");
+	} else {
+		console.log("-- ::2nd tranlator enter");
+		$('#sessions-list').append('<a id="'+id+'" class="list-group-item list-group-item-info">'+displayname+'</a>');
+	}
 }
 
 function checkregEnter(field, event) {
@@ -406,7 +406,7 @@ function publishOwnFeed(useAudio) {
 				console.log("WebRTC error:");
 				console.log(error);
 				if (useAudio) {
-					 publishOwnFeed(false);
+					publishOwnFeed(false);
 				} else {
 					bootbox.alert("WebRTC error... " + JSON.stringify(error));
 					$('#publish').removeAttr('disabled').click(function() { publishOwnFeed(true); });
@@ -423,40 +423,40 @@ function unpublishOwnFeed() {
 }
 
 function checkEnter(event) {
-        var theCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
-        if(theCode == 13) {
-                sendData();
-                return false;
-        } else {
-                return true;
-        }
+	var theCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
+	if(theCode == 13) {
+		sendData();
+		return false;
+	} else {
+		return true;
+	}
 }
 
 function sendData() {
-        var data = $('#datasend').val();
+	var data = $('#datasend').val();
 	logDiv = document.getElementById("datarecv");
 	$('#datarecv').last().append("<span style='color: #2fa4e7'>" + myusername + "</span>" + " : " + data + "<br>");
 	logDiv.scrollTop = logDiv.scrollHeight;
-        if(data === "") {
-                bootbox.alert('Insert a message to send on the DataChannel');
-                return;
-        }
+	if(data === "") {
+		bootbox.alert('Insert a message to send on the DataChannel');
+		return;
+	}
 	datamsg = "<span style='color: #73a839'>" + myusername + "</span>" + " : " + data + "<br>";
-        mcutest.data({
-                text: datamsg,
-                error: function(reason) { bootbox.alert(reason); },
-                success: function() { $('#datasend').val(''); },
-        });
+	mcutest.data({
+		text: datamsg,
+		error: function(reason) { bootbox.alert(reason); },
+		success: function() { $('#datasend').val(''); },
+	});
 }
 
 function getHiddenProp(){
-    var prefixes = ['webkit','moz','ms','o'];
-    if ('hidden' in document) return 'hidden';
-    for (var i = 0; i < prefixes.length; i++){
-        if ((prefixes[i] + 'Hidden') in document) 
-            return prefixes[i] + 'Hidden';
-    }
-    return null;
+	var prefixes = ['webkit','moz','ms','o'];
+	if ('hidden' in document) return 'hidden';
+	for (var i = 0; i < prefixes.length; i++){
+		if ((prefixes[i] + 'Hidden') in document)
+			return prefixes[i] + 'Hidden';
+	}
+	return null;
 }
 
 function newRemoteFeed(id, display) {
@@ -534,63 +534,63 @@ function newRemoteFeed(id, display) {
 				//attachMediaStream($('#transAudio').get(0), stream);
 				$('#trl2panel').removeClass('hide').show();
 				$('#datain').removeClass('hide').show();
-                                $('#dataout').removeClass('hide').show();
+				$('#dataout').removeClass('hide').show();
 			},
 			ondataopen: function(data) {
 				Janus.log("The DataChannel is available!");
-                                $('#videos').removeClass('hide').show();
-                                $('#datasend').removeAttr('disabled');
-                        },
-                        /*ondata: function(data) {
-                                Janus.debug("We got data from: " + data);
-				logDiv = document.getElementById("datarecv");
-                                $('#datarecv').last().append(data);
-				logDiv.scrollTop = logDiv.scrollHeight;
-				var visProp = getHiddenProp();
-				if (document[visProp]) {
-				//notifyMe('NEW MESSAGE!');
-				var html = data;
-				var div = document.createElement("div");
-				div.innerHTML = html;
-				var text = div.textContent || div.innerText || "";
-				var message = text.split(":");
-				var user = message[0];
-				var text = message[1];
-				notifyMe(user, text);
-				}
-                        },*/
+				$('#videos').removeClass('hide').show();
+				$('#datasend').removeAttr('disabled');
+			},
+			/*ondata: function(data) {
+                    Janus.debug("We got data from: " + data);
+    logDiv = document.getElementById("datarecv");
+                    $('#datarecv').last().append(data);
+    logDiv.scrollTop = logDiv.scrollHeight;
+    var visProp = getHiddenProp();
+    if (document[visProp]) {
+    //notifyMe('NEW MESSAGE!');
+    var html = data;
+    var div = document.createElement("div");
+    div.innerHTML = html;
+    var text = div.textContent || div.innerText || "";
+    var message = text.split(":");
+    var user = message[0];
+    var text = message[1];
+    notifyMe(user, text);
+    }
+            },*/
 			ondata: function(data) {
-                                var dataparse = data.split(":");
-                                Janus.debug("We got data from: " + data);
-                                Janus.debug(" -- Split data: " + dataparse[0]);
-                                if(dataparse[0] === "micst") {
-                                        Janus.debug(" -- Going to select userid: " + dataparse[1]);
-                                        if(dataparse[2] === "Off") {
-                                                Janus.debug(" -- User ID: " + dataparse[1] + " mic is closed!");
-                                                $('#'+dataparse[1]).removeClass('active');
-                                        }
-                                        if(dataparse[2] === "On") {
-                                                Janus.debug(" -- User ID: " + dataparse[1] + " mic is open!");
-                                                $('#'+dataparse[1]).addClass('active');
-                                        }
-                                } else {
-                                        logDiv = document.getElementById("datarecv");
-                                        $('#datarecv').last().append(data);
-                                        logDiv.scrollTop = logDiv.scrollHeight;
-                                        var visProp = getHiddenProp();
-                                        if (document[visProp]) {
-                                        //notifyMe('NEW MESSAGE!');
-                                                var html = data;
-                                                var div = document.createElement("div");
-                                                div.innerHTML = html;
-                                                var text = div.textContent || div.innerText || "";
-                                                var message = text.split(":");
-                                                var user = message[0];
-                                                var text = message[1];
-                                                notifyMe(user, text);
-                                        }
-                                }
-                        },
+				var dataparse = data.split(":");
+				Janus.debug("We got data from: " + data);
+				Janus.debug(" -- Split data: " + dataparse[0]);
+				if(dataparse[0] === "micst") {
+					Janus.debug(" -- Going to select userid: " + dataparse[1]);
+					if(dataparse[2] === "Off") {
+						Janus.debug(" -- User ID: " + dataparse[1] + " mic is closed!");
+						$('#'+dataparse[1]).removeClass('active');
+					}
+					if(dataparse[2] === "On") {
+						Janus.debug(" -- User ID: " + dataparse[1] + " mic is open!");
+						$('#'+dataparse[1]).addClass('active');
+					}
+				} else {
+					logDiv = document.getElementById("datarecv");
+					$('#datarecv').last().append(data);
+					logDiv.scrollTop = logDiv.scrollHeight;
+					var visProp = getHiddenProp();
+					if (document[visProp]) {
+						//notifyMe('NEW MESSAGE!');
+						var html = data;
+						var div = document.createElement("div");
+						div.innerHTML = html;
+						var text = div.textContent || div.innerText || "";
+						var message = text.split(":");
+						var user = message[0];
+						var text = message[1];
+						notifyMe(user, text);
+					}
+				}
+			},
 			oncleanup: function() {
 				console.log(" ::: Got a cleanup notification (remote feed " + id + ") :::");
 				//$('#waitingvideo'+remoteFeed.rfindex).remove();

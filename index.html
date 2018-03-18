@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src='js/oidc-client.min.js'></script>
+	<script src='js/oidc-client.min.js'></script>
 </head>
-    <body>
-	<script>
+<body>
+<script>
 	Oidc.Log.logger = console;
 	Oidc.Log.level = Oidc.Log.INFO;
 	new Oidc.UserManager().signinRedirectCallback().then(function(user) {
-	    console.log("signin response success", user);
-	    var path = localStorage.path;
-	    window.location = "/"+path;
+		console.log("signin response success", user);
+		var path = localStorage.path;
+		window.location = "/"+path;
 	}).catch(function(err) {
 		window.location = "/login";
-	    console.log("callback error",err);
+		console.log("callback error",err);
 	});
 
-	</script>
-    </body>
+</script>
+</body>
 </html>

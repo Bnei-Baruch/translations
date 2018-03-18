@@ -1,7 +1,7 @@
 var server = null;
 var srv = "v4g.kbb1.com";
 if(window.location.protocol === 'http:')
-	window.location = "https://" + srv + "/trl"; 
+	window.location = "https://" + srv + "/trl";
 else
 	server = "https://" + srv + "/janustrl";
 
@@ -73,8 +73,8 @@ var lnglist = {
 	"Latvian"	:5560,
 	"Ukrainian"	:5580,
 	"Niderland"     :5600,
-        "China"         :5620
-	}
+	"China"         :5620
+}
 
 if(localStorage.translate) {
 	console.log("  -- Storage Translate: " + localStorage.translate);
@@ -84,7 +84,7 @@ if(localStorage.translate) {
 	room = Number("1"+translate+"0");
 	fwport = lnglist[lang];
 } else {
-        var translate = null;
+	var translate = null;
 }
 
 $(document).on('click', '#translatelist li a', function () {
@@ -103,16 +103,16 @@ $(document).on('click', '#translatelist li a', function () {
 });
 
 $(document).ready(function() {
-        if(translate != undefined && translate != null) {
-                $('#translate').removeClass('hide').html("Translate: " + localStorage.translatetext).show();
-        }
-        if(translate != undefined && translate != null) {
-                $('#start').removeClass('disabled');
-        }
-        Janus.init({ debug: true, callback: function() {
-                $('#start').click(initPlugins);
-                }
-        });
+	if(translate != undefined && translate != null) {
+		$('#translate').removeClass('hide').html("Translate: " + localStorage.translatetext).show();
+	}
+	if(translate != undefined && translate != null) {
+		$('#start').removeClass('disabled');
+	}
+	Janus.init({ debug: true, callback: function() {
+			$('#start').click(initPlugins);
+		}
+	});
 });
 
 /*
@@ -172,7 +172,7 @@ function initPlugins() {
 		error: function(error) {
 			console.log(error);
 			bootbox.alert(error, function() {
-			window.location.reload();
+				window.location.reload();
 			});
 		},
 		destroyed: function() {
@@ -244,14 +244,14 @@ function attachVideo() {
 					var troom = msg["room"];
 					console.log("TRL "+tid+" - start talking");
 					for(var i=1; i<9; i++) {
-                                                if(feeds[i] != null && feeds[i] != undefined && feeds[i].rfid == tid) {
-                                                        var chatid = feeds[i].rfchat;
-                                                        $('#rp'+chatid).css('background-color', '#a9e0b5');
-                                                }
-                                        }
+						if(feeds[i] != null && feeds[i] != undefined && feeds[i].rfid == tid) {
+							var chatid = feeds[i].rfchat;
+							$('#rp'+chatid).css('background-color', '#a9e0b5');
+						}
+					}
 				} else if(event === "stopped-talking") {
 					var tid = msg["id"];
-                                        var troom = msg["room"];
+					var troom = msg["room"];
 					console.log("TRL "+tid+" - stop talking");
 					for(var i=1; i<9; i++) {
 						if(feeds[i] != null && feeds[i] != undefined && feeds[i].rfid == tid) {
@@ -298,14 +298,14 @@ function attachVideo() {
 							var t = remoteFeed.rfindex;
 							clearInterval(tvals[t]);
 							if(dstatus[1] === "bb") {
-								 console.log("-- ::Leaving BB translator");
-								 $('#mixname').empty().hide();
-							 } else if(dstatus[1] === "shidur") {
-							 	console.log("-- ::Leaving Shidur modrator");
-							 } else {
-							 	console.log("-- ::Leaving 2nd tranlator");
-								 $('#trlname').empty().hide();
-							 }
+								console.log("-- ::Leaving BB translator");
+								$('#mixname').empty().hide();
+							} else if(dstatus[1] === "shidur") {
+								console.log("-- ::Leaving Shidur modrator");
+							} else {
+								console.log("-- ::Leaving 2nd tranlator");
+								$('#trlname').empty().hide();
+							}
 							$('#trl2panel').addClass('hide').show();
 							feeds[remoteFeed.rfindex] = null;
 							remoteFeed.detach();
@@ -331,14 +331,14 @@ function attachVideo() {
 							clearInterval(tvals[t]);
 							console.log("-- ::STATUS: " + dstatus[1]);
 							if(dstatus[1] === "bb") {
-								 console.log("-- ::Leaving BB translator");
-								 $('#mixname').empty().hide();
-							 } else if(dstatus[1] === "shidur") {
-								 console.log("-- ::Leaving Shidur modrator");
-							 } else {
-								 console.log("-- ::Leaving 2nd tranlator");
-								 $('#trlname').empty().hide();
-							 }
+								console.log("-- ::Leaving BB translator");
+								$('#mixname').empty().hide();
+							} else if(dstatus[1] === "shidur") {
+								console.log("-- ::Leaving Shidur modrator");
+							} else {
+								console.log("-- ::Leaving 2nd tranlator");
+								$('#trlname').empty().hide();
+							}
 							$('#trl2panel').addClass('hide').show();
 							feeds[remoteFeed.rfindex] = null;
 							remoteFeed.detach();
@@ -419,8 +419,8 @@ function attachVideo() {
 
 function getListener(id, display) {
 	var dparse = display.split("_");
-        var displayname = dparse[0];
-        var userstatus = dparse[1];
+	var displayname = dparse[0];
+	var userstatus = dparse[1];
 	// Chek who enter to room
 	if(userstatus === "bb") {
 		console.log("-- ::BB translator in the room");
@@ -435,9 +435,9 @@ function getListener(id, display) {
 
 function registerUsername() {
 	if($('#username').length === 0) {
-                $('#register').click(registerUsername);
-                $('#username').focus();
-        } else {
+		$('#register').click(registerUsername);
+		$('#username').focus();
+	} else {
 		var username = $('#username').val();
 		var username = username + "_bb";
 		var register = { "request": "join", "room": room, "ptype": "publisher", "display": username };
@@ -468,7 +468,7 @@ function publishOwnFeed(useAudio) {
 				console.log("WebRTC error:");
 				console.log(error);
 				if (useAudio) {
-					 publishOwnFeed(false);
+					publishOwnFeed(false);
 				} else {
 					bootbox.alert("WebRTC error... " + JSON.stringify(error));
 					$('#publish').removeAttr('disabled').click(function() { publishOwnFeed(true); });
@@ -478,24 +478,24 @@ function publishOwnFeed(useAudio) {
 }
 
 function toggleVideo() {
-        vstatus = document.getElementById('togglevideo').value;
-        if(vstatus == "Off"){
-                document.getElementById("togglevideo").value="On";
+	vstatus = document.getElementById('togglevideo').value;
+	if(vstatus == "Off"){
+		document.getElementById("togglevideo").value="On";
 		$('#togglevideo').removeClass('btn-warning');
 		$('#togglevideo').addClass('btn-success');
 		$('#togglevideo').html("Video ON").show();
 		console.log("Video is ON");
 		attachStreamingHandle(11, '#remoteVideo');
-        } else {
-                document.getElementById("togglevideo").value="Off";
+	} else {
+		document.getElementById("togglevideo").value="Off";
 		$('#togglevideo').removeClass('btn-success');
 		$('#togglevideo').addClass('btn-warning');
 		$('#togglevideo').html("Video OFF").show();
 		console.log("Video is OFF");
 		var body = { "request": "stop" };
-                srcvideo.send({"message": body});
-                srcvideo.hangup();
-        }
+		srcvideo.send({"message": body});
+		srcvideo.hangup();
+	}
 }
 
 function toggleMute() {
@@ -503,18 +503,18 @@ function toggleMute() {
 	if(astatus == "Off") {
 		document.getElementById("mute").value="On";
 		$('#mute').removeClass('btn-success');
-        	$('#mute').addClass('btn-danger');
-        	$('#mute').html("OFF").show();
+		$('#mute').addClass('btn-danger');
+		$('#mute').html("OFF").show();
 		mystream.getAudioTracks()[0].enabled = false;
 		console.log("Audio is ON");
 		if(datalive !== null) {
-		//sendMicst('Off');
+			//sendMicst('Off');
 		}
 	} else {
 		document.getElementById("mute").value="Off";
 		$('#mute').removeClass('btn-danger');
-        	$('#mute').addClass('btn-success');
-        	$('#mute').html("ON&nbsp;").show();
+		$('#mute').addClass('btn-success');
+		$('#mute').html("ON&nbsp;").show();
 		mystream.getAudioTracks()[0].enabled = true;
 		console.log("Audio is OFF");
 		//sendMicst('On');
@@ -522,12 +522,12 @@ function toggleMute() {
 }
 
 function sendMicst(micst) {
-        datamsg = "micst:" + mychatid + ":" + micst ;
-        mcutest.data({
-                        text: datamsg,
-                        error: function(reason) { bootbox.alert(reason); },
-                        success: function() { console.log(" -- Status Mic sent!"); },
-        });
+	datamsg = "micst:" + mychatid + ":" + micst ;
+	mcutest.data({
+		text: datamsg,
+		error: function(reason) { bootbox.alert(reason); },
+		success: function() { console.log(" -- Status Mic sent!"); },
+	});
 }
 
 function unpublishOwnFeed() {
@@ -538,189 +538,189 @@ function unpublishOwnFeed() {
 }
 
 function startForward() {
-        // Forward local rtp stream
-        console.log(" --- ::Start forward rtp for id: " + myid);
+	// Forward local rtp stream
+	console.log(" --- ::Start forward rtp for id: " + myid);
 	// decoder.il.kbb1.com = 62.219.8.116
-        var forward = { "request": "rtp_forward","publisher_id":myid,"room":room,"secret":"adminpwd","host":ip,"audio_port":fwport, "video_port":vport};
-        mcutest.send({"message": forward,
-		      success: function(data) {
-				audio_id = data["rtp_stream"]["audio_stream_id"];
-				video_id = data["rtp_stream"]["video_stream_id"];
-				publisher_id = data["publisher_id"];
-                                console.log("  -- We got rtp forward video ID: " + video_id);
-				console.log("  -- We got rtp forward audio ID: " + audio_id);
-				console.log("  -- We got rtp forward publisher ID: " + publisher_id);
-				console.log(JSON.stringify(data));
-			},
-		});
+	var forward = { "request": "rtp_forward","publisher_id":myid,"room":room,"secret":"adminpwd","host":ip,"audio_port":fwport, "video_port":vport};
+	mcutest.send({"message": forward,
+		success: function(data) {
+			audio_id = data["rtp_stream"]["audio_stream_id"];
+			video_id = data["rtp_stream"]["video_stream_id"];
+			publisher_id = data["publisher_id"];
+			console.log("  -- We got rtp forward video ID: " + video_id);
+			console.log("  -- We got rtp forward audio ID: " + audio_id);
+			console.log("  -- We got rtp forward publisher ID: " + publisher_id);
+			console.log(JSON.stringify(data));
+		},
+	});
 }
 
 function stopForward() {
-        // Forward local rtp stream
-        if(publisher_id !== undefined && publisher_id !== null) {
-                console.log("  -- We need to stop rtp forward video ID: " + video_id);
-                console.log("  -- We need to stop rtp forward audio ID: " + audio_id);
-                console.log("  -- We need to stop rtp forward publisher ID: " + publisher_id);
-                var stopfw_video = { "request":"stop_rtp_forward","stream_id":video_id,"publisher_id":publisher_id,"room":room,"secret":"adminpwd" };
-                var stopfw_audio = { "request":"stop_rtp_forward","stream_id":audio_id,"publisher_id":publisher_id,"room":room,"secret":"adminpwd" };
-                mcutest.send({"message": stopfw_video});
-                mcutest.send({"message": stopfw_audio});
+	// Forward local rtp stream
+	if(publisher_id !== undefined && publisher_id !== null) {
+		console.log("  -- We need to stop rtp forward video ID: " + video_id);
+		console.log("  -- We need to stop rtp forward audio ID: " + audio_id);
+		console.log("  -- We need to stop rtp forward publisher ID: " + publisher_id);
+		var stopfw_video = { "request":"stop_rtp_forward","stream_id":video_id,"publisher_id":publisher_id,"room":room,"secret":"adminpwd" };
+		var stopfw_audio = { "request":"stop_rtp_forward","stream_id":audio_id,"publisher_id":publisher_id,"room":room,"secret":"adminpwd" };
+		mcutest.send({"message": stopfw_video});
+		mcutest.send({"message": stopfw_audio});
 	}
 }
 
 function attachStreamingHandle(streamId, mediaElementSelector) {
-        var streaming;
+	var streaming;
 	// Detach previos handle if any (Yeah it's look ugly)
-        var body = { "request": "stop" };
-        if(mediaElementSelector === '#remoteVideo' && srcvideo !== undefined && srcvideo !== null) {
+	var body = { "request": "stop" };
+	if(mediaElementSelector === '#remoteVideo' && srcvideo !== undefined && srcvideo !== null) {
 		srcvideo.send({"message": body});
 		srcvideo.hangup();
-        }
+	}
 	if (mediaElementSelector === '#remoteAudio' && srcaudio !== undefined && srcaudio !== null) {
 		srcaudio.send({"message": body});
 		srcaudio.hangup();
-        }
+	}
 	if (mediaElementSelector === '#transAudio' && trlaudio !== undefined && trlaudio !== null) {
 		trlaudio.send({"message": body});
 		trlaudio.hangup();
-        }
-	
-        janus.attach({
-            plugin: "janus.plugin.streaming",
-            success: function(pluginHandle) {
-                streaming = pluginHandle;
+	}
 
-		// We need to remember where audio and where video handle 
-		if(mediaElementSelector === '#remoteVideo'){
-                        srcvideo = streaming;
-                } else if(mediaElementSelector === '#remoteAudio')  {
-                        srcaudio = streaming;
-                } else if(mediaElementSelector === '#transAudio')  {
-                        trlaudio = streaming;
-                }
+	janus.attach({
+		plugin: "janus.plugin.streaming",
+		success: function(pluginHandle) {
+			streaming = pluginHandle;
 
-                pluginHandles.push(streaming);
+			// We need to remember where audio and where video handle 
+			if(mediaElementSelector === '#remoteVideo'){
+				srcvideo = streaming;
+			} else if(mediaElementSelector === '#remoteAudio')  {
+				srcaudio = streaming;
+			} else if(mediaElementSelector === '#transAudio')  {
+				trlaudio = streaming;
+			}
 
-                // Play stream
-                var body = { "request": "watch", id: streamId };
-                streaming.send({"message": body});
-            },
-            error: function(error) {
-                displayError("Error attaching plugin: " + error);
-            },
-            onmessage: function (msg, jsep) {
-                onStreamingMessage(streaming, msg, jsep);
-            },
-            onremotestream: function(stream) {
-                console.debug("Got a remote stream!", stream);
-                Janus.attachMediaStream($(mediaElementSelector).get(0), stream);
-                janusStream = stream;
-            },
-            oncleanup: function() {
-                console.debug("Got a cleanup notification");
-            }
-        });
+			pluginHandles.push(streaming);
+
+			// Play stream
+			var body = { "request": "watch", id: streamId };
+			streaming.send({"message": body});
+		},
+		error: function(error) {
+			displayError("Error attaching plugin: " + error);
+		},
+		onmessage: function (msg, jsep) {
+			onStreamingMessage(streaming, msg, jsep);
+		},
+		onremotestream: function(stream) {
+			console.debug("Got a remote stream!", stream);
+			Janus.attachMediaStream($(mediaElementSelector).get(0), stream);
+			janusStream = stream;
+		},
+		oncleanup: function() {
+			console.debug("Got a cleanup notification");
+		}
+	});
 }
 
 function onStreamingMessage(handle, msg, jsep) {
-        console.debug("Got a message", msg);
+	console.debug("Got a message", msg);
 
-        var result = msg.result;
+	var result = msg.result;
 
-        if(jsep !== undefined && jsep !== null) {
-            console.debug("Handling SDP as well...", jsep);
+	if(jsep !== undefined && jsep !== null) {
+		console.debug("Handling SDP as well...", jsep);
 
-            // Answer
-            handle.createAnswer({
-                jsep: jsep,
-                media: { audioSend: false, videoSend: false },  // We want recvonly audio/video
-                success: function(jsep) {
-                    console.log("Got SDP!");
-                    console.log(jsep);
-                    var body = { "request": "start" };
-                    handle.send({"message": body, "jsep": jsep});
-                },
-                error: function(error) {
-                    displayError("WebRTC error: " + error);
-                }
-            });
-        }
+		// Answer
+		handle.createAnswer({
+			jsep: jsep,
+			media: { audioSend: false, videoSend: false },  // We want recvonly audio/video
+			success: function(jsep) {
+				console.log("Got SDP!");
+				console.log(jsep);
+				var body = { "request": "start" };
+				handle.send({"message": body, "jsep": jsep});
+			},
+			error: function(error) {
+				displayError("WebRTC error: " + error);
+			}
+		});
+	}
 }
 
 function newRemoteFeed(id, display, talk) {
 	var remoteFeed = null;
 	janus.attach({
-	    plugin: "janus.plugin.videoroom",
-	    success: function(pluginHandle) {
-	            remoteFeed = pluginHandle;
-	            console.log("Plugin attached! (" + remoteFeed.getPlugin() + ", id=" + remoteFeed.getId() + ")");
-	            console.log("  -- This is a subscriber");
-	            // We wait for the plugin to send us an offer
-	            var listen = { "request": "join", "room": room, "ptype": "listener", "feed": id };
-	            remoteFeed.send({"message": listen});
-	    },
-	    error: function(error) {
-	            console.log("  -- Error attaching plugin... " + error);
-	            bootbox.alert("Error attaching plugin... " + error);
-	    },
-	    onmessage: function(msg, jsep) {
-	            console.log(" ::: Got a message (listener) :::");
-	            console.log(JSON.stringify(msg));
-	            var event = msg["videoroom"];
-	            console.log("Event: " + event);
-	            if(event != undefined && event != null) {
-	                    if(event === "attached") {
-	                            // Subscriber created and attached
-	                            for(var i=1;i<9;i++) {
-	                                    if(feeds[i] === undefined || feeds[i] === null) {
-	                                            feeds[i] = remoteFeed;
-	                                            remoteFeed.rfindex = i;
-	                                            break;
-	                                    }
-	                            }
-	                            remoteFeed.rfid = msg["id"];
-	                            remoteFeed.rfdisplay = msg["display"];
-				    remoteFeed.talk = talk;
-				    remoteFeed.talktime = 0;
-				    remoteFeed.talkcounter = 1;
-	                            console.log("Successfully attached to feed " + remoteFeed.rfid + " (" + remoteFeed.rfdisplay + ") in room " + msg["room"]);
-	                            rmusername = remoteFeed.rfdisplay;
-	                            $('#remote'+remoteFeed.rfindex).removeClass('hide').html(remoteFeed.rfdisplay).show();
-	                            $('#trl2panel').removeClass('hide').show();
-	                    } else if(msg["error"] !== undefined && msg["error"] !== null) {
-	                            bootbox.alert(msg["error"]);
-	                    } else {
-	                            // What has just happened?
-	                    }
-	            }
-	            if(jsep !== undefined && jsep !== null) {
-			console.log("Handling SDP as well...");
-			console.log(jsep);
-			// Answer and attach
-			remoteFeed.createAnswer({
-			    jsep: jsep,
-			    media: { audio: false, video: false },  // We want recvonly audio/video
-			    success: function(jsep) {
-				console.log("Got SDP!");
-				var body = { "request": "start", "room": room };
-				remoteFeed.send({"message": body, "jsep": jsep});
-			    },
-			    error: function(error) {
-				console.log("WebRTC error:");
-				console.log(error);
-				bootbox.alert("WebRTC error... " + JSON.stringify(error));
-			    }
-			});
-	            }
-	    },
-	    webrtcState: function(on) {
+		plugin: "janus.plugin.videoroom",
+		success: function(pluginHandle) {
+			remoteFeed = pluginHandle;
+			console.log("Plugin attached! (" + remoteFeed.getPlugin() + ", id=" + remoteFeed.getId() + ")");
+			console.log("  -- This is a subscriber");
+			// We wait for the plugin to send us an offer
+			var listen = { "request": "join", "room": room, "ptype": "listener", "feed": id };
+			remoteFeed.send({"message": listen});
+		},
+		error: function(error) {
+			console.log("  -- Error attaching plugin... " + error);
+			bootbox.alert("Error attaching plugin... " + error);
+		},
+		onmessage: function(msg, jsep) {
+			console.log(" ::: Got a message (listener) :::");
+			console.log(JSON.stringify(msg));
+			var event = msg["videoroom"];
+			console.log("Event: " + event);
+			if(event != undefined && event != null) {
+				if(event === "attached") {
+					// Subscriber created and attached
+					for(var i=1;i<9;i++) {
+						if(feeds[i] === undefined || feeds[i] === null) {
+							feeds[i] = remoteFeed;
+							remoteFeed.rfindex = i;
+							break;
+						}
+					}
+					remoteFeed.rfid = msg["id"];
+					remoteFeed.rfdisplay = msg["display"];
+					remoteFeed.talk = talk;
+					remoteFeed.talktime = 0;
+					remoteFeed.talkcounter = 1;
+					console.log("Successfully attached to feed " + remoteFeed.rfid + " (" + remoteFeed.rfdisplay + ") in room " + msg["room"]);
+					rmusername = remoteFeed.rfdisplay;
+					$('#remote'+remoteFeed.rfindex).removeClass('hide').html(remoteFeed.rfdisplay).show();
+					$('#trl2panel').removeClass('hide').show();
+				} else if(msg["error"] !== undefined && msg["error"] !== null) {
+					bootbox.alert(msg["error"]);
+				} else {
+					// What has just happened?
+				}
+			}
+			if(jsep !== undefined && jsep !== null) {
+				console.log("Handling SDP as well...");
+				console.log(jsep);
+				// Answer and attach
+				remoteFeed.createAnswer({
+					jsep: jsep,
+					media: { audio: false, video: false },  // We want recvonly audio/video
+					success: function(jsep) {
+						console.log("Got SDP!");
+						var body = { "request": "start", "room": room };
+						remoteFeed.send({"message": body, "jsep": jsep});
+					},
+					error: function(error) {
+						console.log("WebRTC error:");
+						console.log(error);
+						bootbox.alert("WebRTC error... " + JSON.stringify(error));
+					}
+				});
+			}
+		},
+		webrtcState: function(on) {
 			Janus.log("-- ::Janus says this WebRTC PeerConnection (feed #" + remoteFeed.rfindex + ") is " + (on ? "up" : "down") + " now");
-	    },
-	    onlocalstream: function(stream) {
-	            // The subscriber stream is recvonly, we don't expect anything here
-	    },
-	    onremotestream: function(stream) {
-	            console.log("Remote feed #" + remoteFeed.rfindex);
+		},
+		onlocalstream: function(stream) {
+			// The subscriber stream is recvonly, we don't expect anything here
+		},
+		onremotestream: function(stream) {
+			console.log("Remote feed #" + remoteFeed.rfindex);
 			/*
 	            trlAudio = document.createElement('audio');
 			trlAudio.setAttribute('id', 'a'+remoteFeed.rfid);
@@ -732,22 +732,22 @@ function newRemoteFeed(id, display, talk) {
 			trlAudio.muted = trlaud.muted;
 	            Janus.attachMediaStream($('#a'+remoteFeed.rfid).get(0), stream);
 			*/
-	            $('#trl2panel').removeClass('hide').show();
-	            $('#datain').removeClass('hide').show();
-	            $('#dataout').removeClass('hide').show();
-	    },
-	    ondataopen: function(data) {
-	            Janus.log("The DataChannel is available!");
-		    datalive = 1;
-	            $('#videos').removeClass('hide').show();
-	            $('#datasend').removeAttr('disabled');
-	    },
-	ondata: function(data) {
-		console.log("Here happend something?");
-	},
-        oncleanup: function() {
-            console.log(" ::: Got a cleanup notification (remote feed " + id + ") :::");
-	    }
+			$('#trl2panel').removeClass('hide').show();
+			$('#datain').removeClass('hide').show();
+			$('#dataout').removeClass('hide').show();
+		},
+		ondataopen: function(data) {
+			Janus.log("The DataChannel is available!");
+			datalive = 1;
+			$('#videos').removeClass('hide').show();
+			$('#datasend').removeAttr('disabled');
+		},
+		ondata: function(data) {
+			console.log("Here happend something?");
+		},
+		oncleanup: function() {
+			console.log(" ::: Got a cleanup notification (remote feed " + id + ") :::");
+		}
 	});
 }
 

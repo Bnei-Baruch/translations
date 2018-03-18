@@ -43,9 +43,9 @@ function attachChat() {
 		},
 		ondataopen: function(data) {
 			Janus.log("The DataChannel is available!");
-                	datalive = 1;
-                	$('#chat').removeClass('hide').show();
-                	$('#datasend').removeAttr('disabled');
+			datalive = 1;
+			$('#chat').removeClass('hide').show();
+			$('#datasend').removeAttr('disabled');
 			// Enter to all rooms
 			for(i in roomlist) {
 				enterChat(Number(i));
@@ -79,8 +79,8 @@ function attachChat() {
 					var text = "NEED SUPPORT!"
 					var logDiv = document.getElementById("datarecv");
 					$('#supusername').removeClass('hide').html(participants[from].split("_")[0]  + " (" + roomlist[fromroom] +") need support").show();
-                                        //$('#datarecv').last().append(datamsg);
-                                        logDiv.scrollTop = logDiv.scrollHeight;
+					//$('#datarecv').last().append(datamsg);
+					logDiv.scrollTop = logDiv.scrollHeight;
 					notifyMe(title, text, true);
 				} else if(fromroom === roomid) {
 					// Public message
@@ -111,7 +111,7 @@ function attachChat() {
 				}
 				datamsg = "<span style='color: green;'><i>" + displayname + "</span> joined</i><br>";
 				var user = "SYSTEM";
-                                //var text = displayname + " joined";
+				//var text = displayname + " joined";
 				//showMessage(user, text, datamsg);
 			} else if(what === "leave") {
 				// Somebody left
@@ -120,10 +120,10 @@ function attachChat() {
 				var displayname = participants[username].split("_")[0]
 				$('#rp' + username).remove();
 				datamsg = "<span style='color: green;'><i>" + displayname + "</span> leave</i><br>";
-                                var user = "SYSTEM";
-                                //var text = displayname + " leave";
-                                //showMessage(user, text, datamsg);
-                                delete chatrooms[fromroom][username];
+				var user = "SYSTEM";
+				//var text = displayname + " leave";
+				//showMessage(user, text, datamsg);
+				delete chatrooms[fromroom][username];
 				delete participants[username];
 			} else if(what === "destroyed") {
 				// Room was destroyed, goodbye!
@@ -141,26 +141,26 @@ function attachChat() {
 }
 
 function chatTime(t) {
-        var date = new Date(t);
-        var h = date.getHours();
-        var m = date.getMinutes();
-        var s = date.getSeconds();
-        var s = (s < 10) ? '0' + s : s;
-        var d =  [h, m, s].join(':');
-        return d;
+	var date = new Date(t);
+	var h = date.getHours();
+	var m = date.getMinutes();
+	var s = date.getSeconds();
+	var s = (s < 10) ? '0' + s : s;
+	var d =  [h, m, s].join(':');
+	return d;
 }
 
 function checkEnter(field, event) {
-        var theCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
-        if(theCode == 13) {
-                if(field.id == 'username')
-                        registerUsername();
-                else if(field.id == 'datasend')
-                        sendData();
-                return false;
-        } else {
-                return true;
-        }
+	var theCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
+	if(theCode == 13) {
+		if(field.id == 'username')
+			registerUsername();
+		else if(field.id == 'datasend')
+			sendData();
+		return false;
+	} else {
+		return true;
+	}
 }
 
 function enterChat(roomid) {
@@ -233,7 +233,7 @@ function sendPrivateMsg(username) {
 				error: function(reason) { bootbox.alert(reason); },
 				success: function() {
 					$('#datarecv').append('<p style="color: purple;"><b>[whisper to ' + display + ']</b> ' + result);
-					$('#datarecv').get(0).scrollTop = $('#datarecv').get(0).scrollHeight;				
+					$('#datarecv').get(0).scrollTop = $('#datarecv').get(0).scrollHeight;
 				}
 			});
 		}
@@ -252,32 +252,32 @@ function showMessage(user, text, datamsg) {
 }
 
 function notifyMe(title, message, tout) {
-        if (!Notification) {
-                alert('Desktop notifications not available in your browser. Try Chromium.');
-                return;
-        }
-        if (Notification.permission !== "granted")
-                Notification.requestPermission();
-        else {
-                var notification = new Notification(title+":", {
-                        icon: 'nlogo.png',
-                        body: message,
-                        requireInteraction: tout
-                });
+	if (!Notification) {
+		alert('Desktop notifications not available in your browser. Try Chromium.');
+		return;
+	}
+	if (Notification.permission !== "granted")
+		Notification.requestPermission();
+	else {
+		var notification = new Notification(title+":", {
+			icon: 'nlogo.png',
+			body: message,
+			requireInteraction: tout
+		});
 		notification.onclick = function () {
-                        window.focus();
-                }
-        }
+			window.focus();
+		}
+	}
 }
 
 function getHiddenProp(){
-    var prefixes = ['webkit','moz','ms','o'];
-    if ('hidden' in document) return 'hidden';
-    for (var i = 0; i < prefixes.length; i++){
-        if ((prefixes[i] + 'Hidden') in document)
-            return prefixes[i] + 'Hidden';
-    }
-    return null;
+	var prefixes = ['webkit','moz','ms','o'];
+	if ('hidden' in document) return 'hidden';
+	for (var i = 0; i < prefixes.length; i++){
+		if ((prefixes[i] + 'Hidden') in document)
+			return prefixes[i] + 'Hidden';
+	}
+	return null;
 }
 
 function sendData() {
@@ -301,11 +301,11 @@ function sendData() {
 
 // Just an helper to generate random usernames
 function randomString(len, charSet) {
-    charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var randomString = '';
-    for (var i = 0; i < len; i++) {
-    	var randomPoz = Math.floor(Math.random() * charSet.length);
-    	randomString += charSet.substring(randomPoz,randomPoz+1);
-    }
-    return randomString;
+	charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	var randomString = '';
+	for (var i = 0; i < len; i++) {
+		var randomPoz = Math.floor(Math.random() * charSet.length);
+		randomString += charSet.substring(randomPoz,randomPoz+1);
+	}
+	return randomString;
 }

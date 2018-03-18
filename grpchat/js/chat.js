@@ -44,11 +44,11 @@ function attachChat() {
 		},
 		ondataopen: function(data) {
 			Janus.log("The DataChannel is available!");
-                	datalive = 1;
-                	$('#chat').removeClass('hide').show();
-                	$('#datasend').removeAttr('disabled');
+			datalive = 1;
+			$('#chat').removeClass('hide').show();
+			$('#datasend').removeAttr('disabled');
 			// Enter to all rooms
-      enterChat(roomId);
+			enterChat(roomId);
 		},
 		ondata: function(data) {
 			Janus.debug("We got data from the DataChannel! " + data);
@@ -70,16 +70,16 @@ function attachChat() {
 				var fromroom = json["room"];
 				var whisper = json["whisper"];
 
-        var user = from;
-        if (from.indexOf('bb_shidur') !== -1) {
-          // Public message
-          user = 'bb_shidur';
-        }
-        showMessage(user, msg, json["to"]);
+				var user = from;
+				if (from.indexOf('bb_shidur') !== -1) {
+					// Public message
+					user = 'bb_shidur';
+				}
+				showMessage(user, msg, json["to"]);
 			} else if(what === "join") {
-        addUser(json);
+				addUser(json);
 			} else if(what === "leave") {
-        removeUser(json);
+				removeUser(json);
 			} else if(what === "destroyed") {
 				// Room was destroyed, goodbye!
 				Janus.warn("The room has been destroyed!");
@@ -96,60 +96,60 @@ function attachChat() {
 }
 
 function checkEnter(field, event) {
-  var theCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
-  if(theCode == 13) {
-    if(field.id == 'datasend')
-      sendData(false);
-    return false;
-  } else {
-    return true;
-  }
+	var theCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
+	if(theCode == 13) {
+		if(field.id == 'datasend')
+			sendData(false);
+		return false;
+	} else {
+		return true;
+	}
 }
 
 function sentEveryone() {
-  sendData(true);
+	sendData(true);
 }
 
 function addUser(p) {
-  if (p.display === 'bb_shidur') {
-    return;
-  }
-  removeUser(p);
-  var anchor = '<a id="user-' + p.username + '" href="#" class="list-group-item">' + p.display + '</a>';
-  var displayNames = $('#rooms-list a').map((key, anchor) => anchor.text).toArray();
-  displayNames.push(p.display);
-  displayNames.sort();
-  var idx = displayNames.indexOf(p.display) - 1;
-  if (idx >= 0) {
-    $('#rooms-list a:eq(' + idx + ')').after(anchor);
-  } else {
-    $('#rooms-list').prepend(anchor);
-  }
-  $('#user-' + p.username).click(function() {
-    setActive($(this));
-    console.log('Clicked on ' + p.username + ' ' + p.display);
-  });
-  checkActive();
+	if (p.display === 'bb_shidur') {
+		return;
+	}
+	removeUser(p);
+	var anchor = '<a id="user-' + p.username + '" href="#" class="list-group-item">' + p.display + '</a>';
+	var displayNames = $('#rooms-list a').map((key, anchor) => anchor.text).toArray();
+	displayNames.push(p.display);
+	displayNames.sort();
+	var idx = displayNames.indexOf(p.display) - 1;
+	if (idx >= 0) {
+		$('#rooms-list a:eq(' + idx + ')').after(anchor);
+	} else {
+		$('#rooms-list').prepend(anchor);
+	}
+	$('#user-' + p.username).click(function() {
+		setActive($(this));
+		console.log('Clicked on ' + p.username + ' ' + p.display);
+	});
+	checkActive();
 }
 
 function removeUser(p) {
-  $('#rooms-list a[id=user-' + p.username + ']').remove();
-  checkActive();
+	$('#rooms-list a[id=user-' + p.username + ']').remove();
+	checkActive();
 }
 
 function setActive(elem) {
-  $('#rooms-list a.active').removeClass('active');
-  elem.addClass('active');
+	$('#rooms-list a.active').removeClass('active');
+	elem.addClass('active');
 }
 
 function checkActive() {
-  if (!$('#rooms-list a.active').size()) {
-    $('#rooms-list a').first().addClass('active');
-  }
+	if (!$('#rooms-list a.active').size()) {
+		$('#rooms-list a').first().addClass('active');
+	}
 }
 
 function getActiveUsername() {
-  return $('#rooms-list a.active').attr('id').replace(/^user-/, '');
+	return $('#rooms-list a.active').attr('id').replace(/^user-/, '');
 }
 
 function enterChat(roomid) {
@@ -163,7 +163,7 @@ function enterChat(roomid) {
 	};
 	transactions[transaction] = function(response) {
 		if (response["textroom"] === "error") {
-      debugger;
+			debugger;
 			// Something went wrong
 			bootbox.alert(response["error"]);
 			return;
@@ -172,11 +172,11 @@ function enterChat(roomid) {
 		$('#datasend').removeAttr('disabled');
 		// Any participants already in?
 		console.log("Participants:", response.participants);
-    response.participants.forEach(function (p) {
-      addUser(p);
-    });
+		response.participants.forEach(function (p) {
+			addUser(p);
+		});
 	};
-  // Send join request
+	// Send join request
 	textroom.data({
 		text: JSON.stringify(register),
 		error: function(reason) {
@@ -212,12 +212,12 @@ function sendPrivateMsg(username) {
 }
 
 function showMessage(user, text, to) {
-  var toMsg = "";
-  if (user == 'bb_shidur') {
-    toMsg = to ? " (to " + to + ")" : " (to everyone)";
-  }
-  var time = new Date().toLocaleTimeString();
-  var datamsg = "<span style='color: #2fa4e7'>" + user + toMsg + " " + time + "</span> : " + text + "<br>";
+	var toMsg = "";
+	if (user == 'bb_shidur') {
+		toMsg = to ? " (to " + to + ")" : " (to everyone)";
+	}
+	var time = new Date().toLocaleTimeString();
+	var datamsg = "<span style='color: #2fa4e7'>" + user + toMsg + " " + time + "</span> : " + text + "<br>";
 	var logDiv = document.getElementById("datarecv");
 	$('#datarecv').last().append(datamsg);
 	logDiv.scrollTop = logDiv.scrollHeight;
@@ -228,29 +228,29 @@ function showMessage(user, text, to) {
 }
 
 function notifyMe(title, message, tout) {
-  if (!Notification) {
-    alert('Desktop notifications not available in your browser. Try Chromium.');
-    return;
-  }
-  if (Notification.permission !== "granted") {
-    Notification.requestPermission();
-  } else {
-    var notification = new Notification(title + ":", {
-      icon: 'nlogo.png',
-      body: message,
-      requireInteraction: tout
-    });
-  }
+	if (!Notification) {
+		alert('Desktop notifications not available in your browser. Try Chromium.');
+		return;
+	}
+	if (Notification.permission !== "granted") {
+		Notification.requestPermission();
+	} else {
+		var notification = new Notification(title + ":", {
+			icon: 'nlogo.png',
+			body: message,
+			requireInteraction: tout
+		});
+	}
 }
 
 function getHiddenProp() {
-  var prefixes = ['webkit','moz','ms','o'];
-  if ('hidden' in document) return 'hidden';
-  for (var i = 0; i < prefixes.length; i++){
-    if ((prefixes[i] + 'Hidden') in document)
-      return prefixes[i] + 'Hidden';
-  }
-  return null;
+	var prefixes = ['webkit','moz','ms','o'];
+	if ('hidden' in document) return 'hidden';
+	for (var i = 0; i < prefixes.length; i++){
+		if ((prefixes[i] + 'Hidden') in document)
+			return prefixes[i] + 'Hidden';
+	}
+	return null;
 }
 
 function sendData(isEveryone) {
@@ -265,11 +265,11 @@ function sendData(isEveryone) {
 		room: roomId,
 		text: data
 	};
-  if (!isEveryone) {
-    var to = getActiveUsername();
-    message.to = to;
-    showMessage('bb_shidur', data, to);
-  }
+	if (!isEveryone) {
+		var to = getActiveUsername();
+		message.to = to;
+		showMessage('bb_shidur', data, to);
+	}
 	textroom.data({
 		text: JSON.stringify(message),
 		error: function(reason) { bootbox.alert(reason); },
@@ -279,12 +279,12 @@ function sendData(isEveryone) {
 
 // Just an helper to generate random usernames
 function randomString(len, charSet) {
-    charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var randomString = '';
-    for (var i = 0; i < len; i++) {
-    	var randomPoz = Math.floor(Math.random() * charSet.length);
-    	randomString += charSet.substring(randomPoz,randomPoz+1);
-    }
-    return randomString;
+	charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	var randomString = '';
+	for (var i = 0; i < len; i++) {
+		var randomPoz = Math.floor(Math.random() * charSet.length);
+		randomString += charSet.substring(randomPoz,randomPoz+1);
+	}
+	return randomString;
 }
 

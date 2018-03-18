@@ -45,9 +45,9 @@ function attachChat() {
 		},
 		ondataopen: function(data) {
 			Janus.log("The DataChannel is available!");
-                	datalive = 1;
-                	$('#videos').removeClass('hide').show();
-                	$('#datasend').removeAttr('disabled');
+			datalive = 1;
+			$('#videos').removeClass('hide').show();
+			$('#datasend').removeAttr('disabled');
 			// Prompt for a display name to join the default room
 			$('#roomjoin').removeClass('hide').show();
 			$('#registernow').removeClass('hide').show();
@@ -79,18 +79,18 @@ function attachChat() {
 					// Private message
 					//datamsg = "<span style='color: red;'><i></span>Support request is sent, please wait..</i><br>";
 					$('#datarecv').append('<p style="color: purple;"><b>[whisper from ' + participants[from].split("_")[0] + ']</b> ' + msg);
-					$('#datarecv').get(0).scrollTop = $('#datarecv').get(0).scrollHeight;				
+					$('#datarecv').get(0).scrollTop = $('#datarecv').get(0).scrollHeight;
 				} else {
 					// Public message
 					//$('#datarecv').append('<p><b>' + participants[from] + ':</b> ' + msg);
-					//$('#datarecv').get(0).scrollTop = $('#datarecv').get(0).scrollHeight;				
+					//$('#datarecv').get(0).scrollTop = $('#datarecv').get(0).scrollHeight;
 					var user = participants[from].split("_")[0];
 					var role = participants[from].split("_")[1];
 					var text = msg;
-					if(role !== "shidur") { 
+					if(role !== "shidur") {
 						var style = "style='color: #2fa4e7'";
 					} else {
-						var style = "style='color: red'";	
+						var style = "style='color: red'";
 					}
 					datamsg = "<i>("+timest+") </i><span " +  style +  ">" + user + "</span>" + " : " + text + "<br>";
 					showMessage(user, text, datamsg);
@@ -106,11 +106,11 @@ function attachChat() {
 					// Add to the participants list
 					$('#list').append('<li id="rp' + username + '" class="list-group-item">' + displayname + '</li>');
 					for(var i=1; i<9; i++) {
-                                        if(feeds[i] != null && feeds[i] != undefined && feeds[i].rfdisplay == display) {
-                                                feeds[i].rfchat = username;
-                                                break;
-                                                }
-                                        }
+						if(feeds[i] != null && feeds[i] != undefined && feeds[i].rfdisplay == display) {
+							feeds[i].rfchat = username;
+							break;
+						}
+					}
 					datamsg = "<span style='color: green;'><i>" + displayname + "</span> joined</i><br>";
 					var user = "SYSTEM";
 					var text = displayname + " joined";
@@ -150,26 +150,26 @@ function attachChat() {
 }
 
 function chatTime(t) {
-        var date = new Date(t);
-        var h = date.getHours();
-        var m = date.getMinutes();
-        var s = date.getSeconds();
-        var s = (s < 10) ? '0' + s : s;
-        var d =  [h, m, s].join(':');
-        return d;
+	var date = new Date(t);
+	var h = date.getHours();
+	var m = date.getMinutes();
+	var s = date.getSeconds();
+	var s = (s < 10) ? '0' + s : s;
+	var d =  [h, m, s].join(':');
+	return d;
 }
 
 function checkEnter(field, event) {
-        var theCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
-        if(theCode == 13) {
-                if(field.id == 'username')
-                        registerUsername();
-                else if(field.id == 'datasend')
-                        sendData();
-                return false;
-        } else {
-                return true;
-        }
+	var theCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
+	if(theCode == 13) {
+		if(field.id == 'username')
+			registerUsername();
+		else if(field.id == 'datasend')
+			sendData();
+		return false;
+	} else {
+		return true;
+	}
 }
 
 function enterSuproom() {
@@ -185,13 +185,13 @@ function enterSuproom() {
 
 function leaveSuproom() {
 	var transaction = randomString(12);
-        var req = { textroom: "leave", transaction: transaction, room: suproom };
-        textroom.data({
-                text: JSON.stringify(req),
-                error: function(reason) {
-                        bootbox.alert(reason);
-                }       
-        }); 
+	var req = { textroom: "leave", transaction: transaction, room: suproom };
+	textroom.data({
+		text: JSON.stringify(req),
+		error: function(reason) {
+			bootbox.alert(reason);
+		}
+	});
 }
 
 function enterChat(myusername) {
@@ -225,11 +225,11 @@ function enterChat(myusername) {
 					$('#list').append('<li id="rp' + p.username + '" class="list-group-item">' + participants[p.username].split("_")[0] + '</li>');
 					// Make videoroom and chat plugin connection
 					for(var i=1; i<9; i++) {
-                                        if(feeds[i] != null && feeds[i] != undefined && feeds[i].rfdisplay == p.display) {
-                                                feeds[i].rfchat = p.username;
-                                                if(feeds[i].talk)
-                                                        $('#rp'+p.username).css('background-color', '#a9e0b5');
-                                                break;
+						if(feeds[i] != null && feeds[i] != undefined && feeds[i].rfdisplay == p.display) {
+							feeds[i].rfchat = p.username;
+							if(feeds[i].talk)
+								$('#rp'+p.username).css('background-color', '#a9e0b5');
+							break;
 						}
 					}
 					$('#rp' + p.username).css('cursor', 'pointer').click(function() {
@@ -269,7 +269,7 @@ function sendPrivateMsg(username) {
 				error: function(reason) { bootbox.alert(reason); },
 				success: function() {
 					$('#datarecv').append('<p style="color: purple;"><b>[whisper to ' + display + ']</b> ' + result);
-					$('#datarecv').get(0).scrollTop = $('#datarecv').get(0).scrollHeight;				
+					$('#datarecv').get(0).scrollTop = $('#datarecv').get(0).scrollHeight;
 				}
 			});
 		}
@@ -306,9 +306,9 @@ function supportReq() {
 function checkUser() {
 	var moderators = [];
 	for(var i in participants) {
-                var display = participants[i];
-                var username = i;
-                if(display === "bb_shidur") {
+		var display = participants[i];
+		var username = i;
+		if(display === "bb_shidur") {
 			var moderators = username;
 		}
 	}
@@ -330,32 +330,32 @@ function showMessage(user, text, datamsg) {
 }
 
 function notifyMe(title, message, tout) {
-        if (!Notification) {
-                alert('Desktop notifications not available in your browser. Try Chromium.');
-                return;
-        }
-        if (Notification.permission !== "granted")
-                Notification.requestPermission();
-        else {
-                var notification = new Notification(title+":", {
-                        icon: 'nlogo.png',
-                        body: message,
+	if (!Notification) {
+		alert('Desktop notifications not available in your browser. Try Chromium.');
+		return;
+	}
+	if (Notification.permission !== "granted")
+		Notification.requestPermission();
+	else {
+		var notification = new Notification(title+":", {
+			icon: 'nlogo.png',
+			body: message,
 			requireInteraction: tout
-                });
+		});
 		notification.onclick = function () {
-                        window.focus();
-                }
-        }
+			window.focus();
+		}
+	}
 }
 
 function getHiddenProp(){
-    var prefixes = ['webkit','moz','ms','o'];
-    if ('hidden' in document) return 'hidden';
-    for (var i = 0; i < prefixes.length; i++){
-        if ((prefixes[i] + 'Hidden') in document)
-            return prefixes[i] + 'Hidden';
-    }
-    return null;
+	var prefixes = ['webkit','moz','ms','o'];
+	if ('hidden' in document) return 'hidden';
+	for (var i = 0; i < prefixes.length; i++){
+		if ((prefixes[i] + 'Hidden') in document)
+			return prefixes[i] + 'Hidden';
+	}
+	return null;
 }
 
 function sendData() {
@@ -379,11 +379,11 @@ function sendData() {
 
 // Just an helper to generate random usernames
 function randomString(len, charSet) {
-    charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var randomString = '';
-    for (var i = 0; i < len; i++) {
-    	var randomPoz = Math.floor(Math.random() * charSet.length);
-    	randomString += charSet.substring(randomPoz,randomPoz+1);
-    }
-    return randomString;
+	charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	var randomString = '';
+	for (var i = 0; i < len; i++) {
+		var randomPoz = Math.floor(Math.random() * charSet.length);
+		randomString += charSet.substring(randomPoz,randomPoz+1);
+	}
+	return randomString;
 }

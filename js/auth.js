@@ -16,15 +16,15 @@ $(document).ready(function() {
 function oidcLogin(path) {
 	localStorage.path = path;
 	var settings = {
-	    authority: 'https://accounts.kbb1.com/auth/realms/main',
-	    client_id: 'trl',
-	    redirect_uri: 'https://trl.kbb1.com/',
-	    post_logout_redirect_uri: 'https://trl.kbb1.com/login',
-	    response_type: 'id_token token',
-	    scope: 'profile',
+		authority: 'https://accounts.kbb1.com/auth/realms/main',
+		client_id: 'trl',
+		redirect_uri: 'https://trl.kbb1.com/',
+		post_logout_redirect_uri: 'https://trl.kbb1.com/login',
+		response_type: 'id_token token',
+		scope: 'profile',
 
-	    filterProtocolClaims: true,
-	    loadUserInfo: true
+		filterProtocolClaims: true,
+		loadUserInfo: true
 	};
 	client = new Oidc.UserManager(settings);
 
