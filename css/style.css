@@ -1,3 +1,50 @@
+#remoteVideo {width: 640; height: 360;}
+#remoteAudio {display: none;}
+#transAudio {display: none;}
+#mixAudio {display: none;}
+div#srcctlbar{ padding:10px; color:#CCC;}
+div#trlctlbar{ padding:10px; color:#CCC;}
+div#mixctlbar{ padding:10px; color:#CCC;}
+div#micctlbar{ padding:1px; color:#CCC;}
+input#srcvolumeslider{ width: 280px;}
+input#trlvolumeslider{ width: 250px;}
+input#mixvolumeslider{ width: 250px;}
+input#micvolumeslider{ width: 180px;}
+.col-md-4 {
+    float: right;
+    width: 510px;
+    margin-right: 2px;
+}
+.col-md-5 {
+    width: 500px;
+    margin-right: 2px;
+}
+.trlchat {
+    height: 280px;
+}
+#micheader {
+    height: 62px;
+}
+.srcvideo {
+    height: 370px;
+}
+.col-md-7 {
+    float: left;
+    width: 650px;
+    margin-right: 2px;
+}
+.pull-right {
+  width: 500px;
+  float: right;
+}
+.list-group-item {
+    padding: 1px 3px
+}
+canvas {
+    padding: 1px 3px
+    align: bottom;
+}
+
 .rounded {
 	border-radius: 5px;
 }
@@ -5,6 +52,11 @@
 .centered {
 	display: block;
 	margin: auto;
+}
+
+.middled {
+	margin: auto;
+	max-width: 600px;
 }
 
 .relative {

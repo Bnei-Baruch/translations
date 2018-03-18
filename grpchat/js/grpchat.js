@@ -1,4 +1,4 @@
-var server = "https://galaxy-dev.kbb1.com:8889/janus";
+var server = "https://v4g.kbb1.com/janusgxy";
 
 var roomId = 9999;
 
@@ -41,8 +41,7 @@ function initPlugin() {
   // Create session
   janus = new Janus({
     server: server,
-    iceServers: [{url: "stun:v4g.kbb1.com:3478"},
-      {url: "turn:v4g.kbb1.com", credential:"tpass", username: "tuser"}],
+    iceServers: [{url: "stun:v4g.kbb1.com:3478"}],
       success: function() {
         attachChat();
         // attachHandle();

@@ -74,7 +74,7 @@ function attachChat() {
 				msg = msg.replace(new RegExp('<', 'g'), '&lt');
 				msg = msg.replace(new RegExp('>', 'g'), '&gt');
 				var from = json["from"];
-				var timest = chatTime(json["date"]);
+				var timest = new Date(json["date"]).toLocaleTimeString('he-HE');
 				var whisper = json["whisper"];
 				if(whisper === true) {
 					// Private message

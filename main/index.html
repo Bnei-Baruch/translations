@@ -4,80 +4,32 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>BB WebRTC Translation</title>
-<script type="text/javascript" src="js/jquery.min.js" ></script>
-<script type="text/javascript" src="js/jquery.blockUI.js" ></script>
-<script type="text/javascript" src="js/bootstrap.js"></script>
-<script type="text/javascript" src="js/bootbox.min.js"></script>
-<script type="text/javascript" src="js/spin.min.js"></script>
-<script type="text/javascript" src="js/control.js"></script>
-<script type="text/javascript" src="js/adapter.js?4" ></script>
-<script type="text/javascript" src="js/janus.js?4" ></script>
-<script type="text/javascript" src="js/volume-meter/volume-meter.js"></script>
-<script type="text/javascript" src="js/volume-meter/main.js?1"></script>
-<script type="text/javascript" src="js/trlclient.js?3"></script>
-<script type="text/javascript" src="js/chat.js?3"></script>
-<link rel="stylesheet" href="css/cerulean/bootstrap.css" type="text/css"/>
-<link rel="stylesheet" href="css/demo.css" type="text/css"/>
-<link rel="stylesheet" href="css/font-awesome.min.css">
-<link href="css/slider2.css" rel="stylesheet">
-<style>
-#remoteVideo {width: 640; height: 360;}
-#remoteAudio {display: none;}
-#transAudio {display: none;}
-#mixAudio {display: none;}
-div#srcctlbar{ padding:10px; color:#CCC;}
-div#trlctlbar{ padding:10px; color:#CCC;}
-div#mixctlbar{ padding:10px; color:#CCC;}
-div#micctlbar{ padding:1px; color:#CCC;}
-input#srcvolumeslider{ width: 280px;}
-input#trlvolumeslider{ width: 250px;}
-input#mixvolumeslider{ width: 250px;}
-input#micvolumeslider{ width: 180px;}
-.col-md-4 {
-    float: right;
-    width: 510px;
-    margin-right: 2px;
-}
-.col-md-5 {
-    width: 500px;
-    margin-right: 2px;
-}
-.trlchat {
-    height: 280px;
-}
-#micheader {
-    height: 62px;
-}
-.srcvideo {
-    height: 370px;
-}
-.col-md-7 {
-    float: left;
-    width: 650px;
-    margin-right: 2px;
-}
-.pull-right {
-  width: 500px;
-  float: right;
-}
-.list-group-item {
-    padding: 1px 3px
-}
-canvas {
-    padding: 1px 3px
-    align: bottom;
-}
-</style>
+<title>BB Translation System</title>
+<script type="text/javascript" src="../js/oidc-client.min.js"></script>
+<script type="text/javascript" src="../js/jsrsasign-all-min.js"></script>
+<script type="text/javascript" src="../js/jquery-1.9.1.min.js" ></script>
+<script type="text/javascript" src="../js/trlauth.js"></script>
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../js/bootbox.min.js"></script>
+<script type="text/javascript" src="../js/control.js"></script>
+<script type="text/javascript" src="../js/adapter.js" ></script>
+<script type="text/javascript" src="../js/janus.js" ></script>
+<script type="text/javascript" src="../js/vmeter.js"></script>
+<script type="text/javascript" src="../js/trlclient.js"></script>
+<script type="text/javascript" src="../js/chat.js"></script>
+<link rel="stylesheet" href="../css/bootstrap.min.css" type="text/css"/>
+<link rel="stylesheet" href="../css/style.css" type="text/css"/>
+<link rel="stylesheet" href="../css/font-awesome.min.css">
+<link href="../css/slider2.css" rel="stylesheet">
 </head>
 <body>
-<script>
+<!--script>
 // request permission on page load
 document.addEventListener('DOMContentLoaded', function () {
   if (Notification.permission !== "granted")
     Notification.requestPermission();
 });
-</script>
+</script-->
 <div class="container">
 <div class="page-header">
 <div class="row">
@@ -124,15 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		</div>
 		<div class="btn-group btn-group-sm">
 		<button autocomplete="off" id="devices" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Input: <span class="caret"></span></button>
-		    <ul id="deviceslist" class="dropdown-menu" role="menu">
-		    </ul>
-		</div>
-		<!--div class="btn-group btn-group-sm">
-			<button type="button" id="support" class="btn btn-primary btn-xs disabled" value="Support"><i class="fa fa-headphones fa-lg"></i> Support Offline</button>
-                </div-->
-		 <div class="input-group input-group-sm" style="left: 110px;" id="input">
-		  <span class="input-group-addon" style="width: 50px;">My name:</span>
-		  <input type="text" class="form-control" placeholder="Enter Here" id="displayname" style="width: 200px;">
+		    <ul id="deviceslist" class="dropdown-menu" role="menu"></ul>
 		</div>
 		</div>
 		<button type="button" id="support" class="btn btn-primary btn-xs disabled" value="Support" style="position: absolute; top: 10px; left: 240px;"><i class="fa fa-headphones fa-lg"></i> Support Offline</button>
@@ -149,20 +93,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                 </div>
                         </div>
                 </div>
-	</div>
-</div>
-<div class="container hide" id="videojoin">
-	<div class="row">
-		<span class="label label-info" id="you"></span>
-		<div class="col-md-5" id="controls">
-			<div class="input-group margin-bottom-md hide" id="registernow">
-				<span class="input-group-addon">@</span>
-				<input autocomplete="off" class="form-control" autocomplete="off" type="text" placeholder="Choose a display name" id="username" onkeypress="return checkEnter(this, event);"></input>
-				<span class="input-group-btn">
-					<button class="btn btn-success" autocomplete="off" id="register">Enter</button>
-				</span>
-			</div>
-		</div>
 	</div>
 </div>
 <div class="container hide" id="videos">

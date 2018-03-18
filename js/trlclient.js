@@ -5,6 +5,7 @@ if(window.location.protocol === 'http:')
 else
 	server = "https://" + srv + "/janustrl";
 
+var trluser = null;
 var janus = null;
 var mcutest = null;
 var textroom = null;
@@ -123,23 +124,11 @@ $(document).on('keydown', function(e) {
 });
 
 $(document).ready(function() {
-	intializePlayer();
-	initDevices();
+	oidcLogin();
+	//checkDevices();
+});
 
-	if(localStorage.username) {
-		$("#displayname").val(localStorage.username.split("_")[0]);
-        }
-
-	$('#displayname').keyup(function(){
-		if($(this).val().length > 3) {
-		    $('#start').attr('disabled', false);            
-		} else {
-		    $('#start').attr('disabled',true);
-		}
-		if(/[^a-zA-Z0-9]/.test($(this))) {
-			this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');
-		}
-	})
+function initApp() {
 
 	if(translate != undefined && translate != null) {
 		$('#translate').removeClass('hide').html("Translate to: " + localStorage.translatetext).show();
@@ -159,7 +148,7 @@ $(document).ready(function() {
 		$('#start').click(initPlugins);
 		}
 	});
-});
+}
 
 function initPlugins() {
 	if(started)
@@ -197,7 +186,9 @@ function attachVideo() {
 			$('#start').removeAttr('disabled').html("Disconnect")
 				.click(function() {
 					$(this).attr('disabled', true);
-					janus.destroy();
+					client.signoutRedirect();
+					//window.location.reload();
+					//janus.destroy();
 				});
 
 		},
@@ -357,8 +348,6 @@ function attachVideo() {
 			console.log(" ::: Got a local stream :::");
 			mystream = stream;
 			console.log(JSON.stringify(stream));
-			$('#input').hide();
-			$('#videojoin').hide();
 			$('#videos').removeClass('hide').show();
 			$('#micpanel').removeClass('hide').show();
 			$('#mute').click(toggleMute);
@@ -473,7 +462,7 @@ function getListener(id, display) {
 }
 
 function registerUsername() {
-	var username = $('#displayname').val();
+	var username = trluser.given_name;
 	var username = username + "_trl";
 	var register = { "request": "join", "room": room, "ptype": "publisher", "display": username };
 	myusername = username ;
@@ -485,10 +474,61 @@ function registerUsername() {
 	attachChat();
 }
 
+function errorMessage(message, e) {
+            console.error(message, typeof e == 'undefined' ? '' : e);
+            bootbox.alert(message);
+ }
+
+function checkDevices() {
+
+	intializePlayer();
+
+	var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+	if ( !iOS && Notification.permission !== "granted") {
+                Notification.requestPermission();
+        }
+
+            navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+            if (navigator.getUserMedia) {
+                navigator.getUserMedia({ audio: true, video: false }, function (stream) {
+                    //document.querySelector('video').src = window.URL.createObjectURL(stream);
+                    //var mediaStreamTrack = stream.getVideoTracks()[0];
+                    //if (typeof mediaStreamTrack != "undefined") {
+                    //    mediaStreamTrack.onended = function () {//for Chrome.
+                    //        errorMessage('Your webcam is busy!')
+                    //    }
+                    //} else errorMessage('Permission denied!');
+			initDevices(devices);
+                }, function (e) {
+                    var message;
+                    switch (e.name) {
+                        case 'NotFoundError':
+                        case 'DevicesNotFoundError':
+                            message = 'Please setup your webcam first.';
+                            break;
+                        case 'SourceUnavailableError':
+                            message = 'Your webcam is busy';
+                            break;
+                        case 'PermissionDeniedError':
+                        case 'SecurityError':
+                            message = 'Permission denied!';
+                            break;
+                        default: errorMessage('Permission devices usage is Rejected! You must grant it.', e);
+                            return;
+                    }
+                    errorMessage(message);
+		    $('#start').addClass('disabled');
+                });
+            } else {
+		errorMessage('Uncompatible browser!');
+		$('#start').addClass('disabled');
+	    }
+}
+
 function initDevices(devices) {
 	navigator.mediaDevices.enumerateDevices().then(function(devices) {
 		devices.forEach(function(device) {
-			var option = $("'<li><a href='#' id='" + device.deviceId + "'>" + device.label + "</a></li>");
+			var option = $("<li><a href=# id=" + device.deviceId + ">" + device.label + "</a></li>");
 			if(device.kind === 'audioinput') {
 				$('#deviceslist').append(option);
 			} else if(device.kind === 'videoinput') {
@@ -497,7 +537,6 @@ function initDevices(devices) {
 		});
 		setDevices();
 	});
-
 }
 
 function setDevices() {
@@ -511,6 +550,7 @@ function setDevices() {
 		device = "default";
 		micLevel();
 	}
+	initApp();
 }
 
 
@@ -632,16 +672,18 @@ function stopForward() {
 function attachStreamingHandle(streamId, mediaElementSelector) {
         var streaming;
 	// Detach previos handle if any (Yeah it's look ugly)
-        var body = { "request": "stop" };
         if(mediaElementSelector === '#remoteVideo' && srcvideo !== undefined && srcvideo !== null) {
+		var body = { "request": "stop" };
 		srcvideo.send({"message": body});
 		srcvideo.hangup();
         }
 	if (mediaElementSelector === '#remoteAudio' && srcaudio !== undefined && srcaudio !== null) {
+		var body = { "request": "switch", "id": streamId };
 		srcaudio.send({"message": body});
-		srcaudio.hangup();
+		return
         }
 	if (mediaElementSelector === '#transAudio' && trlaudio !== undefined && trlaudio !== null) {
+		var body = { "request": "stop" };
 		trlaudio.send({"message": body});
 		trlaudio.hangup();
         }
