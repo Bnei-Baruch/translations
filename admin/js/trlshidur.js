@@ -451,6 +451,8 @@ function newRemoteFeed(id, display, talk) {
 								console.log(jsep);
 								var body = { "request": "start", "room": roomid };
 								remoteFeed.send({"message": body, "jsep": jsep});
+								trlAudio.volume = trlaud.volume;
+								trlAudio.muted = trlaud.muted;
 							},
 							error: function(error) {
 								console.log("WebRTC error:");
@@ -473,8 +475,6 @@ function newRemoteFeed(id, display, talk) {
 				//trlAudio.setAttribute('controls', 'yes');
 				trlAudio.setAttribute('autoplay', 'yes');
 				document.body.appendChild(trlAudio);
-				trlAudio.volume = trlaud.volume;
-				trlAudio.muted = trlaud.muted;
 				Janus.attachMediaStream($('#a'+remoteFeed.rfid).get(0), stream);
 				$('#trl2panel').removeClass('hide').show();
 				$('#datain').removeClass('hide').show();
