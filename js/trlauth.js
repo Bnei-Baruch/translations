@@ -30,7 +30,10 @@ function oidcLogin() {
 			var at = KJUR.jws.JWS.parse(user.access_token);
 			console.log(at);
 			var roles = at.payloadObj.realm_access.roles;
-			if(roles.filter(role => role.match(/^(bb_user|trl_user)$/)).length > 0) {
+			var path = localStorage.path;
+			var trlrole = roles.filter(role => role.match(/^(bb_user|trl_user)$/)).length;
+			var adminrole = roles.filter(role => role.match(/^(trl_admin)$/)).length
+			if(trlrole > 0) {
 				trluser = user.profile;
 				checkDevices();
 			} else {

@@ -98,9 +98,7 @@ $(document).on('click', '#translatelist li a', function () {
 	fwport = lnglist[lang];
 	console.log("  -- Selected Translate: " + translate);
 	$('#translate').removeClass('hide').html("Translate to: " + $(this).text()).show();
-	if(translate != undefined && translate != null) {
-		$('#start').removeClass('disabled');
-	}
+	validateSelection();
 });
 
 $(document).on('click', '#deviceslist li a', function () {
@@ -112,9 +110,7 @@ $(document).on('click', '#deviceslist li a', function () {
 	console.log("  -- Selected Device: " + devicetext);
 	$('#devices').removeClass('hide').html("Input: " + $(this).text()).show();
 	micLevel();
-	//if(translate != undefined && translate != null) {
-	//      $('#start').removeClass('disabled');
-	//}
+	validateSelection();
 });
 
 $(document).on('keydown', function(e) {
@@ -122,6 +118,14 @@ $(document).on('keydown', function(e) {
 		console.log("--:: ALT key pressed!");
 	}
 });
+
+function validateSelection() {
+	if(device != undefined && device != null && device != "default" && translate != undefined && translate != null) {
+		$('#start').removeClass('disabled')
+	} else {
+		$('#start').addClass('disabled');
+	}
+}
 
 $(document).ready(function() {
 	oidcLogin();
@@ -134,14 +138,8 @@ function initApp() {
 		$('#translate').removeClass('hide').html("Translate to: " + localStorage.translatetext).show();
 	}
 
-	if(device == "default") {
-		$('#devices').removeClass('hide').html("Input: Default").show();
-	} else {
+	if(device != undefined && device != null && device != "default") {
 		$('#devices').removeClass('hide').html("Input: " + localStorage.devicetext).show();
-	}
-
-	if(translate != undefined && translate != null) {
-		$('#start').removeClass('disabled');
 	}
 
 	Janus.init({ debug: false, callback: function() {
@@ -529,7 +527,7 @@ function initDevices(devices) {
 	navigator.mediaDevices.enumerateDevices().then(function(devices) {
 		devices.forEach(function(device) {
 			var option = $("<li><a href=# id=" + device.deviceId + ">" + device.label + "</a></li>");
-			if(device.kind === 'audioinput') {
+			if(device.kind === 'audioinput' && device.deviceId != "default") {
 				$('#deviceslist').append(option);
 			} else if(device.kind === 'videoinput') {
 				$('#video-device').append(option);
