@@ -16,8 +16,7 @@ function attachChat() {
 		},
 		webrtcState: function(on) {
 			Janus.log("Janus says our DataChannel WebRTC PeerConnection is " + (on ? "up" : "down") + " now");
-			enterChat(myusername);
-			//$("#videoleft").parent().unblock();
+			$("#videoleft").parent().unblock();
 		},
 		onmessage: function(msg, jsep) {
 			Janus.debug(" ::: Got a message :::");
@@ -47,10 +46,10 @@ function attachChat() {
 		ondataopen: function(data) {
 			Janus.log("The DataChannel is available!");
 			datalive = 1;
-			//$('#videos').removeClass('hide').show();
-			//$('#datasend').removeAttr('disabled');
+			$('#videos').removeClass('hide').show();
+			$('#datasend').removeAttr('disabled');
 			// Prompt for a display name to join the default room
-			//$('#roomjoin').removeClass('hide').show();
+			$('#roomjoin').removeClass('hide').show();
 			$('#registernow').removeClass('hide').show();
 			$('#register').click(registerUsername);
 			$('#username').focus();
@@ -126,7 +125,7 @@ function attachChat() {
 				var username = json["username"];
 				var display = participants[username];
 				var displayname = participants[username].split("_")[0]
-				if(display !== "bb_shidur") {
+				if(display !== "bb_shidur" && display !== myusername) {
 					$('#rp' + username).remove();
 					datamsg = "<span style='color: green;'><i>" + displayname + "</span> leave</i><br>";
 					var user = "SYSTEM";
@@ -215,8 +214,6 @@ function enterChat(myusername) {
 			return;
 		}
 		// We're in
-		$('#roomjoin').hide();
-		$('#chat').removeClass('hide').show();
 		$('#datasend').removeAttr('disabled');
 		// Any participants already in?
 		console.log("Participants:", response.participants);

@@ -159,7 +159,8 @@ function attachVideo() {
 			$('#start').removeAttr('disabled').html("Disconnect")
 				.click(function() {
 					$(this).attr('disabled', true);
-					window.location.reload();
+					client.signoutRedirect();
+					//window.location.reload();
 					//janus.destroy();
 				});
 
@@ -174,7 +175,7 @@ function attachVideo() {
 		webrtcState: function(on) {
 			Janus.log("Janus says our WebRTC PeerConnection is " + (on ? "up" : "down") + " now");
 			// Enter chat with videoroom plugin username
-			//enterChat(myusername);
+			enterChat(myusername);
 		},
 		onmessage: function(msg, jsep) {
 			//console.log(" ::: Got a message (publisher) :::");
