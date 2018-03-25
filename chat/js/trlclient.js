@@ -5,6 +5,7 @@ if(window.location.protocol === 'http:')
 else
 	server = "https://" + srv + "/janustrl";
 
+var trluser = null;
 var janus = null;
 var mcutest = null;
 var textroom = null;
@@ -103,6 +104,11 @@ $(document).on('click', '#translatelist li a', function () {
 });
 
 $(document).ready(function() {
+	oidcLogin();
+	//initApp();
+});
+
+function initApp() {
 	if(translate != undefined && translate != null) {
 		$('#translate').removeClass('hide').html("Translate: " + localStorage.translatetext).show();
 	}
@@ -113,48 +119,7 @@ $(document).ready(function() {
 			$('#start').click(initPlugins);
 		}
 	});
-});
-
-/*
-$(document).ready(function() {
-	intializePlayer();
-	initDevices();
-
-	if(localStorage.username) {
-		$("#displayname").val(localStorage.username.split("_")[0]);
-        }
-
-	$('#displayname').keyup(function(){
-		if($(this).val().length > 3) {
-		    $('#start').attr('disabled', false);            
-		} else {
-		    $('#start').attr('disabled',true);
-		}
-		if(/[^a-zA-Z0-9]/.test($(this))) {
-			this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');
-		}
-	})
-
-	if(translate != undefined && translate != null) {
-		$('#translate').removeClass('hide').html("Translate to: " + localStorage.translatetext).show();
-	}
-
-	if(device == "default") {
-		$('#devices').removeClass('hide').html("Input: Default").show();
-	} else {
-		$('#devices').removeClass('hide').html("Input: " + localStorage.devicetext).show();
-	}
-
-	if(translate != undefined && translate != null) {
-		$('#start').removeClass('disabled');
-	}
-
-	Janus.init({ debug: true, callback: function() {
-		$('#start').click(initPlugins);
-		}
-	});
-});
-*/
+};
 
 function initPlugins() {
 	if(started)
@@ -190,10 +155,7 @@ function attachVideo() {
 			console.log("Plugin attached! (" + mcutest.getPlugin() + ", id=" + mcutest.getId() + ")");
 			console.log("  -- This is a publisher/manager");
 			// Prepare the username registration
-			//registerUsername();
-			$('#roomjoin').removeClass('hide').show();
-			$('#registernow').removeClass('hide').show();
-			$('#register').click(registerUsername);
+			registerUsername();
 			$('#start').removeAttr('disabled').html("Disconnect")
 				.click(function() {
 					$(this).attr('disabled', true);
@@ -434,23 +396,16 @@ function getListener(id, display) {
 }
 
 function registerUsername() {
-	if($('#username').length === 0) {
-		$('#register').click(registerUsername);
-		$('#username').focus();
-	} else {
-		var username = $('#username').val();
-		var username = username + "_bb";
-		var register = { "request": "join", "room": room, "ptype": "publisher", "display": username };
-		myusername = username ;
-		localStorage.username = myusername;
-		var dparse = myusername.split("_");
-		mydisplayname = dparse[0];
-		$('#roomjoin').addClass('hide').show();
-		mcutest.send({"message": register});
-		// Here we going to attach Chat plugin
-		//enterChat(myusername);
-		attachChat();
-	}
+	var username = trluser.given_name;
+	var username = username + "_bb";
+	var register = { "request": "join", "room": room, "ptype": "publisher", "display": username };
+	myusername = username ;
+	localStorage.username = myusername;
+	var dparse = myusername.split("_");
+	mydisplayname = dparse[0];
+	mcutest.send({"message": register});
+	// Here we going to attach Chat plugin
+	attachChat();
 }
 
 function publishOwnFeed(useAudio) {
@@ -590,7 +545,7 @@ function attachStreamingHandle(streamId, mediaElementSelector) {
 		success: function(pluginHandle) {
 			streaming = pluginHandle;
 
-			// We need to remember where audio and where video handle 
+			// We need to remember where audio and where video handle
 			if(mediaElementSelector === '#remoteVideo'){
 				srcvideo = streaming;
 			} else if(mediaElementSelector === '#remoteAudio')  {

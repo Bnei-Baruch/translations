@@ -5,13 +5,14 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>BB WebRTC Translation</title>
-	<script type="text/javascript" src="js/jquery.min.js" ></script>
-	<script type="text/javascript" src="js/jquery.blockUI.js" ></script>
-	<script type="text/javascript" src="js/bootstrap.js"></script>
-	<script type="text/javascript" src="js/bootbox.min.js"></script>
-	<script type="text/javascript" src="js/spin.min.js"></script>
-	<script type="text/javascript" src="js/adapter.js?1" ></script>
-	<script type="text/javascript" src="js/janus.js?1" ></script>
+	<script type="text/javascript" src="../js/oidc-client.min.js"></script>
+	<script type="text/javascript" src="../js/jsrsasign-all-min.js"></script>
+	<script type="text/javascript" src="../js/jquery-1.9.1.min.js" ></script>
+	<script type="text/javascript" src="../js/trlauth.js"></script>
+	<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../js/bootbox.min.js"></script>
+	<script type="text/javascript" src="../js/adapter.js" ></script>
+	<script type="text/javascript" src="../js/janus.js" ></script>
 	<script type="text/javascript" src="js/trlclient.js"></script>
 	<script type="text/javascript" src="js/chat.js"></script>
 	<link rel="stylesheet" href="css/cerulean/bootstrap.css" type="text/css"/>
@@ -89,20 +90,6 @@
 		<div class="container" id="details">
 			<div class="row">
 				<div class="col-md-5">
-				</div>
-			</div>
-		</div>
-		<div class="container hide" id="roomjoin">
-			<div class="row">
-				<span class="label label-info" id="you"></span>
-				<div class="col-md-5" id="controls">
-					<div class="input-group margin-bottom-md hide" id="registernow">
-						<span class="input-group-addon">@</span>
-						<input autocomplete="off" class="form-control" autocomplete="off" type="text" placeholder="Choose a display name" id="username" onkeypress="return checkEnter(this, event);"></input>
-						<span class="input-group-btn">
-								<button class="btn btn-success" autocomplete="off" id="register">Enter</button>
-							</span>
-					</div>
 				</div>
 			</div>
 		</div>
