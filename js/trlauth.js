@@ -31,12 +31,18 @@ function oidcLogin() {
 			console.log(at);
 			var roles = at.payloadObj.realm_access.roles;
 			var path = localStorage.path;
-			var trlrole = roles.filter(role => role.match(/^(bb_user|trl_user)$/)).length;
+			var bbrole = roles.filter(role => role.match(/^(bb_user)$/)).length;
+			var trlrole = roles.filter(role => role.match(/^(trl_user)$/)).length;
 			var adminrole = roles.filter(role => role.match(/^(trl_admin)$/)).length;
 
 			if(trlrole > 0 && path.match(/^(main|mini)$/)) {
 				trluser = user.profile;
 				checkDevices();
+			}
+
+			if(bbrole > 0 && path.match(/^(chat)$/)) {
+				trluser = user.profile;
+				initApp();
 			}
 
 			if(adminrole > 0 && path.match(/^(admin)$/)) {
