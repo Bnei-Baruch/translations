@@ -142,6 +142,8 @@ function initApp() {
 		$('#devices').removeClass('hide').html("Input: " + localStorage.devicetext).show();
 	}
 
+	validateSelection();
+
 	Janus.init({ debug: false, callback: function() {
 			$('#start').click(initPlugins);
 		}
