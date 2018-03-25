@@ -5,6 +5,7 @@ if(window.location.protocol === 'http:')
 else
 	server = "https://" + srv + "/janustrl";
 
+var trluser = null;
 var janus = null;
 var mcutest = null;
 var started = false;
@@ -64,10 +65,14 @@ var roomlist = {
 }
 
 $(document).ready(function() {
+	oidcLogin();
+});
+
+function initApp() {
 	intializePlayer();
 	// Initialize the library (console debug enabled)
 	Janus.init({ debug: false, callback: initPlugin });
-});
+}
 
 function initPlugin() {
 	// Create session

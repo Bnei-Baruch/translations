@@ -32,14 +32,30 @@ function oidcLogin() {
 			var roles = at.payloadObj.realm_access.roles;
 			var path = localStorage.path;
 			var trlrole = roles.filter(role => role.match(/^(bb_user|trl_user)$/)).length;
-			var adminrole = roles.filter(role => role.match(/^(trl_admin)$/)).length
-			if(trlrole > 0) {
+			var adminrole = roles.filter(role => role.match(/^(trl_admin)$/)).length;
+
+			if(trlrole > 0 && path.match(/^(main|mini)$/)) {
 				trluser = user.profile;
 				checkDevices();
-			} else {
+			}
+
+			if(adminrole > 0 && path.match(/^(admin)$/)) {
+				trluser = user.profile;
+				initApp();
+			}
+
+			if(trlrole == 0 && path.match(/^(main|mini)$/)) {
 				console.log("User role does not authorized");
 				trluser = user.profile;
 				checkDevices();
+			}
+
+			if(adminrole == 0 && path.match(/^(admin)$/)) {
+				console.log("User role does not authorized");
+				trluser = user.profile;
+				bootbox.alert("User does not have permission", function() {
+					window.location = "/login";
+				});
 			}
 		}
 	}).catch(function(error) {
