@@ -128,6 +128,7 @@ function validateSelection() {
 }
 
 $(document).ready(function() {
+	localStorage.path = window.location.pathname;
 	oidcLogin();
 	//checkDevices();
 });

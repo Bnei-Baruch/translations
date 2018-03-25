@@ -35,28 +35,28 @@ function oidcLogin() {
 			var trlrole = roles.filter(role => role.match(/^(trl_user)$/)).length;
 			var adminrole = roles.filter(role => role.match(/^(trl_admin)$/)).length;
 
-			if(trlrole > 0 && path.match(/^(main|mini)$/)) {
+			if(trlrole > 0 && path.match(/^(main|mini|\/main\/|\/mini\/)$/)) {
 				trluser = user.profile;
 				checkDevices();
 			}
 
-			if(bbrole > 0 && path.match(/^(chat)$/)) {
+			if(bbrole > 0 && path.match(/^(chat|\/chat\/)$/)) {
 				trluser = user.profile;
 				initApp();
 			}
 
-			if(adminrole > 0 && path.match(/^(admin)$/)) {
+			if(adminrole > 0 && path.match(/^(admin|\/admin\/)$/)) {
 				trluser = user.profile;
 				initApp();
 			}
 
-			if(trlrole == 0 && path.match(/^(main|mini)$/)) {
+			if(trlrole == 0 && path.match(/^(main|mini|\/main\/|\/mini\/)$/)) {
 				console.log("User role does not authorized");
 				trluser = user.profile;
 				checkDevices();
 			}
 
-			if(adminrole == 0 && path.match(/^(admin)$/)) {
+			if(adminrole == 0 && path.match(/^(admin|\/admin\/)$/)) {
 				console.log("User role does not authorized");
 				trluser = user.profile;
 				bootbox.alert("User does not have permission", function() {
