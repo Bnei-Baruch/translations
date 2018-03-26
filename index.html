@@ -8,12 +8,10 @@
 	Oidc.Log.logger = console;
 	Oidc.Log.level = Oidc.Log.INFO;
 	new Oidc.UserManager().signinRedirectCallback().then(function(user) {
-		console.log("Signin response success", user);
-		console.log("State: ", user.state);
 		window.location = "/"+user.state;
 	}).catch(function(err) {
-		window.location = "/login";
 		console.log("callback error",err);
+		window.location = "/login";
 	});
 
 </script>

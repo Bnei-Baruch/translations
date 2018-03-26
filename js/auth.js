@@ -6,9 +6,7 @@ Oidc.Log.level = Oidc.Log.INFO;
 var client = null;
 
 $(document).ready(function() {
-	console.log("We are ready");
 	$('button').click(function() {
-		console.log("Click",this.id);
 		oidcLogin(this.id);
 	});
 });
@@ -28,7 +26,6 @@ function oidcLogin(appname) {
 	client = new Oidc.UserManager(settings);
 
 	client.getUser().then(function(user) {
-		console.log("User: ",user);
 		if(user === null) {
 			client.signinRedirect({state: appname});
 		} else {

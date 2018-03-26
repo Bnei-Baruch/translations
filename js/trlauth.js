@@ -21,13 +21,11 @@ function oidcLogin(appname) {
 	client = new Oidc.UserManager(settings);
 
 	client.getUser().then(function(user) {
-		console.log("User: ",user);
 		if(user === null) {
 			window.location = "/login";
 		} else {
 			console.log("Hi: ",user.profile);
 			var at = KJUR.jws.JWS.parse(user.access_token);
-			console.log(at);
 			var roles = at.payloadObj.realm_access.roles;
 			var bbrole = roles.filter(role => role.match(/^(bb_user)$/)).length;
 			var trlrole = roles.filter(role => role.match(/^(trl_user)$/)).length;
