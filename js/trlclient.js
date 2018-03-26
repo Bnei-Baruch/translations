@@ -524,8 +524,12 @@ function initApp() {
 	}
 }
 
-function initDevices(devices) {
+function initDevices() {
 	navigator.mediaDevices.enumerateDevices().then(function(devices) {
+		console.log(":: Devices: ", devices);
+		// Does we need to continue if no input devices?
+		if(devices.length === 0)
+			console.log(":: We did not found any input device");
 		devices.forEach(function(device) {
 			var option = $("<li><a href=# id=" + device.deviceId + ">" + device.label + "</a></li>");
 			if(device.kind === 'audioinput' && device.deviceId != "default") {
