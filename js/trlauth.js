@@ -23,40 +23,38 @@ function oidcLogin(appname) {
 	client.getUser().then(function(user) {
 		console.log("User: ",user);
 		if(user === null) {
-			//client.signinRedirect();
 			window.location = "/login";
 		} else {
 			console.log("Hi: ",user.profile);
 			var at = KJUR.jws.JWS.parse(user.access_token);
 			console.log(at);
 			var roles = at.payloadObj.realm_access.roles;
-			var path = localStorage.path;
 			var bbrole = roles.filter(role => role.match(/^(bb_user)$/)).length;
 			var trlrole = roles.filter(role => role.match(/^(trl_user)$/)).length;
 			var adminrole = roles.filter(role => role.match(/^(trl_admin)$/)).length;
 
-			if(trlrole > 0 && path.match(/^(main|mini|\/main\/|\/mini\/)$/)) {
+			if(trlrole > 0 && appname.match(/^(main|mini)$/)) {
 				trluser = user.profile;
 				initApp();
 			}
 
-			if(bbrole > 0 && path.match(/^(chat|\/chat\/)$/)) {
+			if(bbrole > 0 && appname.match(/^(chat)$/)) {
 				trluser = user.profile;
 				initApp();
 			}
 
-			if(adminrole > 0 && path.match(/^(admin|\/admin\/)$/)) {
+			if(adminrole > 0 && appname.match(/^(admin)$/)) {
 				trluser = user.profile;
 				initApp();
 			}
 
-			if(trlrole == 0 && path.match(/^(main|mini|\/main\/|\/mini\/)$/)) {
+			if(trlrole == 0 && appname.match(/^(main|mini)$/)) {
 				console.log("User role does not authorized");
 				trluser = user.profile;
 				initApp();
 			}
 
-			if(adminrole == 0 && path.match(/^(admin|\/admin\/)$/)) {
+			if(adminrole == 0 && appname.match(/^(admin)$/)) {
 				console.log("User role does not authorized");
 				trluser = user.profile;
 				bootbox.alert("User does not have permission", function() {
