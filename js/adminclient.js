@@ -65,8 +65,7 @@ var roomlist = {
 }
 
 $(document).ready(function() {
-	localStorage.path = window.location.pathname;
-	oidcLogin();
+	oidcLogin(appname);
 });
 
 function initApp() {

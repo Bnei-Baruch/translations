@@ -13,8 +13,7 @@ $(document).ready(function() {
 	});
 });
 
-function oidcLogin(path) {
-	localStorage.path = path;
+function oidcLogin(appname) {
 	var settings = {
 		authority: 'https://accounts.kbb1.com/auth/realms/main',
 		client_id: 'trl',
@@ -31,13 +30,9 @@ function oidcLogin(path) {
 	client.getUser().then(function(user) {
 		console.log("User: ",user);
 		if(user === null) {
-			client.signinRedirect({state: window.location});
+			client.signinRedirect({state: appname});
 		} else {
-			var path = localStorage.path;
-			window.location = "/"+path;
-			//console.log("Hi: ",user.profile);
-			//var at = KJUR.jws.JWS.parse(user.access_token);
-			//console.log(at);
+			window.location = "/"+appname;
 		}
 	}).catch(function(error) {
 		console.log("Error: ",error);

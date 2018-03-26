@@ -5,7 +5,7 @@ Oidc.Log.logger = console;
 Oidc.Log.level = Oidc.Log.INFO;
 var client = null;
 
-function oidcLogin() {
+function oidcLogin(appname) {
 	var settings = {
 		authority: 'https://accounts.kbb1.com/auth/realms/main',
 		client_id: 'trl',

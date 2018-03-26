@@ -104,9 +104,7 @@ $(document).on('click', '#translatelist li a', function () {
 });
 
 $(document).ready(function() {
-	localStorage.path = window.location.pathname;
-	oidcLogin();
-	//initApp();
+	oidcLogin(appname);
 });
 
 function initApp() {
