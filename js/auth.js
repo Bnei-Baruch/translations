@@ -31,7 +31,7 @@ function oidcLogin(path) {
 	client.getUser().then(function(user) {
 		console.log("User: ",user);
 		if(user === null) {
-			client.signinRedirect();
+			client.signinRedirect({state: window.location});
 		} else {
 			var path = localStorage.path;
 			window.location = "/"+path;

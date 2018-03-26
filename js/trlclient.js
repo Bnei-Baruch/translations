@@ -130,10 +130,9 @@ function validateSelection() {
 $(document).ready(function() {
 	localStorage.path = window.location.pathname;
 	oidcLogin();
-	//checkDevices();
 });
 
-function initApp() {
+function initJanus() {
 
 	if(translate != undefined && translate != null) {
 		$('#translate').removeClass('hide').html("Translate to: " + localStorage.translatetext).show();
@@ -480,7 +479,7 @@ function errorMessage(message, e) {
 	bootbox.alert(message);
 }
 
-function checkDevices() {
+function initApp() {
 
 	intializePlayer();
 
@@ -551,7 +550,7 @@ function setDevices() {
 		device = "default";
 		micLevel();
 	}
-	initApp();
+	initJanus();
 }
 
 

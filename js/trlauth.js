@@ -37,7 +37,7 @@ function oidcLogin() {
 
 			if(trlrole > 0 && path.match(/^(main|mini|\/main\/|\/mini\/)$/)) {
 				trluser = user.profile;
-				checkDevices();
+				initApp();
 			}
 
 			if(bbrole > 0 && path.match(/^(chat|\/chat\/)$/)) {
@@ -53,7 +53,7 @@ function oidcLogin() {
 			if(trlrole == 0 && path.match(/^(main|mini|\/main\/|\/mini\/)$/)) {
 				console.log("User role does not authorized");
 				trluser = user.profile;
-				checkDevices();
+				initApp();
 			}
 
 			if(adminrole == 0 && path.match(/^(admin|\/admin\/)$/)) {
