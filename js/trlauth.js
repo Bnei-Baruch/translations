@@ -24,7 +24,6 @@ function oidcLogin(appname) {
 		if(user === null) {
 			window.location = "/login";
 		} else {
-			console.log("Hi: ",user.profile);
 			var at = KJUR.jws.JWS.parse(user.access_token);
 			var roles = at.payloadObj.realm_access.roles;
 			var bbrole = roles.filter(role => role.match(/^(bb_user)$/)).length;
