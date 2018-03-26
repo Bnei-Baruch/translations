@@ -503,10 +503,10 @@ function initApp() {
 			switch (e.name) {
 				case 'NotFoundError':
 				case 'DevicesNotFoundError':
-					message = 'Please setup your webcam first.';
+					message = 'No input devices found.';
 					break;
 				case 'SourceUnavailableError':
-					message = 'Your webcam is busy';
+					message = 'Your input device is busy';
 					break;
 				case 'PermissionDeniedError':
 				case 'SecurityError':
