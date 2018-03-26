@@ -5,7 +5,7 @@ Oidc.Log.logger = console;
 Oidc.Log.level = Oidc.Log.INFO;
 var client = null;
 
-localStorage.path = "main";
+const appname = "chat";
 
 var settings = {
 	authority: 'https://accounts.kbb1.com/auth/realms/main',
@@ -23,10 +23,9 @@ client = new Oidc.UserManager(settings);
 client.getUser().then(function(user) {
 	console.log("User: ",user);
 	if(user === null) {
-		client.signinRedirect();
+		client.signinRedirect({state: appname});
 	} else {
-		var path = localStorage.path;
-		window.location = "/"+path;
+		window.location = "/"+appname;
 	}
 }).catch(function(error) {
 	console.log("Error: ",error);
