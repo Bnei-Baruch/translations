@@ -113,17 +113,8 @@ function micLevel() {
 	audioContext = new AudioContext();
 
 	// Attempt to get audio input
-	try {
-		// monkeypatch getUserMedia
-		navigator.getUserMedia =
-			navigator.getUserMedia ||
-			navigator.webkitGetUserMedia ||
-			navigator.mozGetUserMedia;
-
-		// ask for an audio input
-		navigator.getUserMedia({
-			"audio": {
-				"mandatory": {
+	try {navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+		navigator.getUserMedia({"audio": {"mandatory": {
 					"googEchoCancellation": "false",
 					"googAutoGainControl": "false",
 					"googNoiseSuppression": "false",

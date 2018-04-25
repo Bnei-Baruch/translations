@@ -48,7 +48,7 @@ function oidcLogin(appname) {
 			if(trlrole === 0 && appname.match(/^(main|mini)$/)) {
 				console.log("User role does not authorized");
 				trluser = user.profile;
-				bootbox.alert("User does not have permission", function() {
+				bootbox.alert("Access denied.", function() {
 					window.location = "/login";
 				});
 			}
