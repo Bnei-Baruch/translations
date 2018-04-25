@@ -45,13 +45,15 @@ function oidcLogin(appname) {
 				initApp();
 			}
 
-			if(trlrole == 0 && appname.match(/^(main|mini)$/)) {
+			if(trlrole === 0 && appname.match(/^(main|mini)$/)) {
 				console.log("User role does not authorized");
 				trluser = user.profile;
-				initApp();
+				bootbox.alert("User does not have permission", function() {
+					window.location = "/login";
+				});
 			}
 
-			if(adminrole == 0 && appname.match(/^(admin)$/)) {
+			if(adminrole === 0 && appname.match(/^(admin)$/)) {
 				console.log("User role does not authorized");
 				trluser = user.profile;
 				bootbox.alert("User does not have permission", function() {

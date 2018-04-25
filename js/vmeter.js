@@ -121,18 +121,17 @@ function micLevel() {
 			navigator.mozGetUserMedia;
 
 		// ask for an audio input
-		navigator.getUserMedia(
-			{
-				"audio": {
-					"mandatory": {
-						"googEchoCancellation": "false",
-						"googAutoGainControl": "false",
-						"googNoiseSuppression": "false",
-						"googHighpassFilter": "false"
-					},
-					"optional": [{sourceId: device}]
+		navigator.getUserMedia({
+			"audio": {
+				"mandatory": {
+					"googEchoCancellation": "false",
+					"googAutoGainControl": "false",
+					"googNoiseSuppression": "false",
+					"googHighpassFilter": "false"
 				},
-			}, gotStream, didntGetStream);
+				"optional": [{sourceId: device}]
+			},
+		}, gotStream, didntGetStream);
 	} catch (e) {
 		alert('getUserMedia threw exception :' + e);
 	}
