@@ -45,6 +45,14 @@ function oidcLogin(appname) {
 				initApp();
 			}
 
+			if(bbrole === 0) {
+				console.log("User role does not authorized");
+				trluser = user.profile;
+				bootbox.alert("Access denied.", function() {
+					window.location = "/login";
+				});
+			}
+
 			if(trlrole === 0 && appname.match(/^(main|mini)$/)) {
 				console.log("User role does not authorized");
 				trluser = user.profile;
