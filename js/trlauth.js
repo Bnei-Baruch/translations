@@ -49,7 +49,8 @@ function oidcLogin(appname) {
 				console.log("User role does not authorized");
 				trluser = user.profile;
 				bootbox.alert("Access denied.", function() {
-					window.location = "/login";
+					//window.location = "/login";
+					client.signoutRedirect();
 				});
 			}
 
@@ -57,7 +58,8 @@ function oidcLogin(appname) {
 				console.log("User role does not authorized");
 				trluser = user.profile;
 				bootbox.alert("Access denied.", function() {
-					window.location = "/login";
+					client.signoutRedirect();
+					//window.location = "/login";
 				});
 			}
 
