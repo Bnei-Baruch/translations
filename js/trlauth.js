@@ -33,42 +33,32 @@ function oidcLogin(appname) {
 			if(trlrole > 0 && appname.match(/^(main|mini)$/)) {
 				trluser = user.profile;
 				initApp();
-			}
-
-			if(bbrole > 0 && appname.match(/^(chat)$/)) {
+			} else if(bbrole > 0 && appname.match(/^(chat)$/)) {
 				trluser = user.profile;
 				initApp();
-			}
-
-			if(adminrole > 0 && appname.match(/^(admin)$/)) {
+			} else if(adminrole > 0 && appname.match(/^(admin)$/)) {
 				trluser = user.profile;
 				initApp();
-			}
-
-			if(bbrole === 0) {
-				console.log("User role does not authorized");
-				trluser = user.profile;
-				bootbox.alert("Access denied.", function() {
-					//window.location = "/login";
-					client.signoutRedirect();
-				});
-			}
-
-			if(trlrole === 0 && appname.match(/^(main|mini)$/)) {
+			} else if(bbrole === 0) {
 				console.log("User role does not authorized");
 				trluser = user.profile;
 				bootbox.alert("Access denied.", function() {
 					client.signoutRedirect();
-					//window.location = "/login";
 				});
-			}
-
-			if(adminrole === 0 && appname.match(/^(admin)$/)) {
+			} else if(trlrole === 0 && appname.match(/^(main|mini)$/)) {
+				console.log("User role does not authorized");
+				trluser = user.profile;
+				bootbox.alert("Access denied.", function() {
+					client.signoutRedirect();
+				});
+			} else if(adminrole === 0 && appname.match(/^(admin)$/)) {
 				console.log("User role does not authorized");
 				trluser = user.profile;
 				bootbox.alert("User does not have permission", function() {
 					window.location = "/login";
 				});
+			} else {
+				console.log("What just happend?");
 			}
 		}
 	}).catch(function(error) {
