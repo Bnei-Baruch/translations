@@ -1,5 +1,5 @@
 var server = null;
-var srv = "v4g.kbb1.com";
+var srv = "trl.kbb1.com";
 if(window.location.protocol === 'http:')
 	window.location = "https://" + srv + "/trl";
 else

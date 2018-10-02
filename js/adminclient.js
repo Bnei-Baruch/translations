@@ -1,4 +1,4 @@
-var srv = "v4g.kbb1.com";
+var srv = "trl.kbb1.com";
 var server = null;
 if(window.location.protocol === 'http:')
 	server = "http://" + srv + "/janustrl";
